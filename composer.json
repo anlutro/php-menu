@@ -1,0 +1,25 @@
+{
+	"name": "anlutro/menu",
+	"description": "Dynamic menu builder.",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Andreas Lutro",
+			"email": "anlutro@gmail.com"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0",
+		"illuminate/support": "4.1.*",
+		"patchwork/utf8": "*"
+	},
+	"require-dev": {
+		"mockery/mockery": "dev-master"
+	},
+	"autoload": {
+		"psr-4": {
+			"anlutro\\LaravelMenu\\": "src/"
+		}
+	},
+	"minimum-stability": "stable"
+}
