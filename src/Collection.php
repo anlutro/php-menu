@@ -58,12 +58,12 @@ class Collection// extends BaseCollection
 
 	public function addSubmenu($title, array $attributes = array(), $priority = null)
 	{
-		return $this->addItemInstance($this->makeSubmenu($title), $priority);
+		return $this->addItemInstance($this->makeSubmenu($title, $attributes), $priority);
 	}
 
-	public function makeSubmenu($title)
+	public function makeSubmenu($title, array $attributes = array())
 	{
-		return new SubmenuItem($title);
+		return new SubmenuItem($title, null, $attributes);
 	}
 
 	public function addDivider()
