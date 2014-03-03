@@ -16,4 +16,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 	{
 		$this->app['config']->package('anlutro/menu', __DIR__.'/config', 'anlutro/menu');
 	}
+
+	public function provides()
+	{
+		return array('anlutro\Menu\Builder');
+	}
 }
