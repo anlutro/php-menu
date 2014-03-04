@@ -38,6 +38,14 @@ class Collection// extends BaseCollection
 		return implode(' ', $strings);
 	}
 
+	/**
+	 * Add a new ItemInterface instance to the collection.
+	 *
+	 * @param  ItemInterface $item
+	 * @param  int           $priority
+	 *
+	 * @return ItemInterface $item
+	 */
 	public function addItemInstance(ItemInterface $item, $priority = null)
 	{
 		$priority = (int) $priority;
@@ -46,6 +54,16 @@ class Collection// extends BaseCollection
 		return $item;
 	}
 
+	/**
+	 * Add a regular item to the menu collection.
+	 *
+	 * @param  string $title
+	 * @param  string $url
+	 * @param  array  $attributes
+	 * @param  int    $priority
+	 *
+	 * @return Item
+	 */
 	public function addItem($title, $url, array $attributes = array(), $priority = null)
 	{
 		return $this->addItemInstance($this->makeItem($title, $url, $attributes), $priority);
@@ -56,6 +74,15 @@ class Collection// extends BaseCollection
 		return new Item($title, $url, $attributes);
 	}
 
+	/**
+	 * Add a submenu to the menu collection.
+	 *
+	 * @param  string $title
+	 * @param  array  $attributes
+	 * @param  int    $priority
+	 *
+	 * @return SubmenuItem
+	 */
 	public function addSubmenu($title, array $attributes = array(), $priority = null)
 	{
 		return $this->addItemInstance($this->makeSubmenu($title, $attributes), $priority);

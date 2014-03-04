@@ -16,6 +16,14 @@ class Builder
 		}
 	}
 
+	/**
+	 * Create a new menu.
+	 *
+	 * @param  string $key
+	 * @param  array  $attributes
+	 *
+	 * @return Collection
+	 */
 	public function createMenu($key, array $attributes = array())
 	{
 		if (isset($this->menus[$key])) {
@@ -28,21 +36,49 @@ class Builder
 		return $this->menus[$key] = $this->makeMenuCollection($attributes);
 	}
 
+	/**
+	 * Get a menu.
+	 *
+	 * @param  string $key
+	 *
+	 * @return Collection
+	 */
 	public function getMenu($key)
 	{
 		return array_key_exists($key, $this->menus) ? $this->menus[$key] : null;
 	}
 
+	/**
+	 * See if a menu exists.
+	 *
+	 * @param  string  $key
+	 *
+	 * @return boolean
+	 */
 	public function hasMenu($key)
 	{
 		return array_key_exists($key, $this->menus);
 	}
 
+	/**
+	 * Render a menu if it exists.
+	 *
+	 * @param  string $key
+	 *
+	 * @return string|null
+	 */
 	public function render($key)
 	{
 		if ($menu = $this->getMenu($key)) return $menu->render();
 	}
 
+	/**
+	 * Make a new menu collection instance.
+	 *
+	 * @param  array  $attributes
+	 *
+	 * @return Collection
+	 */
 	protected function makeMenuCollection(array $attributes)
 	{
 		return new Collection($attributes);
