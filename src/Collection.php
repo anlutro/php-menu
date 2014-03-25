@@ -1,22 +1,51 @@
 <?php
+/**
+ * PHP Menu Builder
+ * 
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  php-menu
+ */
 
 namespace anlutro\Menu;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection as BaseCollection;
 
-class Collection// extends BaseCollection
+/**
+ * A collection of menu items.
+ */
+class Collection
 {
 	const DIVIDER = 'divider';
 
+	/**
+	 * The menu items.
+	 *
+	 * @var array
+	 */
 	protected $items = [];
-	protected $ids;
 
+	/**
+	 * The menu items, indexed by id.
+	 *
+	 * @var array
+	 */
+	protected $ids = [];
+
+	/**
+	 * @param array $attributes
+	 */
 	public function __construct(array $attributes = array())
 	{
 		$this->attributes = $this->parseAttributes($attributes);
 	}
 
+	/**
+	 * @param  array  $in
+	 *
+	 * @return array
+	 */
 	protected function parseAttributes(array $in)
 	{
 		$out = $in;
@@ -27,6 +56,11 @@ class Collection// extends BaseCollection
 		return $out;
 	}
 
+	/**
+	 * Render the menu's attributes.
+	 *
+	 * @return string
+	 */
 	public function renderAttributes()
 	{
 		$attributes = $this->attributes;
@@ -44,7 +78,7 @@ class Collection// extends BaseCollection
 	 * @param  ItemInterface $item
 	 * @param  int           $priority
 	 *
-	 * @return ItemInterface $item
+	 * @return \anlutro\Menu\ItemInterface $item
 	 */
 	public function addItemInstance(ItemInterface $item, $priority = null)
 	{
@@ -62,13 +96,22 @@ class Collection// extends BaseCollection
 	 * @param  array  $attributes
 	 * @param  int    $priority
 	 *
-	 * @return Item
+	 * @return \anlutro\Menu\Item
 	 */
 	public function addItem($title, $url, array $attributes = array(), $priority = null)
 	{
 		return $this->addItemInstance($this->makeItem($title, $url, $attributes), $priority);
 	}
 
+	/**
+	 * Make a new menu item instance.
+	 *
+	 * @param  string $title
+	 * @param  string $url
+	 * @param  array  $attributes
+	 *
+	 * @return \anlutro\Menu\Item
+	 */
 	public function makeItem($title, $url, array $attributes = array())
 	{
 		return new Item($title, $url, $attributes);
@@ -81,28 +124,54 @@ class Collection// extends BaseCollection
 	 * @param  array  $attributes
 	 * @param  int    $priority
 	 *
-	 * @return SubmenuItem
+	 * @return \anlutro\Menu\SubmenuItem
 	 */
 	public function addSubmenu($title, array $attributes = array(), $priority = null)
 	{
 		return $this->addItemInstance($this->makeSubmenu($title, $attributes), $priority);
 	}
 
+	/**
+	 * Make a new submenu item instance.
+	 *
+	 * @param  string $title
+	 * @param  array  $attributes
+	 *
+	 * @return \anlutro\Menu\Item
+	 */
 	public function makeSubmenu($title, array $attributes = array())
 	{
 		return new SubmenuItem($title, null, $attributes);
 	}
 
-	public function addDivider()
+	/**
+	 * Add a divider to the items.
+	 *
+	 * @param  int  $priority
+	 */
+	public function addDivider($priority = null)
 	{
-		$this->items[] = 'divider';
+		$priority = (int) $priority;
+		$this->items[$priority][] = static::DIVIDER;
 	}
 
+	/**
+	 * Get an item from the collection.
+	 *
+	 * @param  string $id
+	 *
+	 * @return \anlutro\Menu\ItemInterface|null
+	 */
 	public function getItem($id)
 	{
 		return array_key_exists($id, $this->ids) ? $this->ids[$id] : null;
 	}
 
+	/**
+	 * Render the menu as an unordered list.
+	 *
+	 * @return string
+	 */
 	public function render()
 	{
 		$items = '';

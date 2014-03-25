@@ -1,16 +1,54 @@
 <?php
+/**
+ * PHP Menu Builder
+ * 
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  php-menu
+ */
 
 namespace anlutro\Menu;
 
 use Illuminate\Support\Str;
 
+/**
+ * A menu item.
+ */
 class Item implements ItemInterface
 {
+	/**
+	 * The title of the item.
+	 *
+	 * @var string
+	 */
 	protected $title;
+
+	/**
+	 * The URL the item links to.
+	 *
+	 * @var string
+	 */
 	protected $url;
-	protected $attributes;
+
+	/**
+	 * The item's attributes.
+	 *
+	 * @var array
+	 */
+	protected $attributes = [];
+
+	/**
+	 * The glyphicon of the item.
+	 *
+	 * @var string
+	 */
 	protected $glyphicon;
 
+	/**
+	 * @param string $title
+	 * @param string $url
+	 * @param array  $attributes
+	 */
 	public function __construct($title, $url, array $attributes = array())
 	{
 		$this->title = $title;
@@ -18,6 +56,11 @@ class Item implements ItemInterface
 		$this->attributes = $this->parseAttributes($attributes);
 	}
 
+	/**
+	 * @param  array  $in
+	 *
+	 * @return array
+	 */
 	protected function parseAttributes(array $in)
 	{
 		if (isset($in['glyphicon'])) {
@@ -30,17 +73,32 @@ class Item implements ItemInterface
 		return $out;
 	}
 
+	/**
+	 * Get the identifier of the item.
+	 *
+	 * @return string
+	 */
 	public function getId()
 	{
 		return $this->attributes['id'];
 	}
 
+	/**
+	 * Render the item as a link.
+	 *
+	 * @return string
+	 */
 	public function renderLink()
 	{
 		return '<a href="' . $this->renderUrl() . '" ' .$this->renderAttributes() .
 			'>' . $this->renderTitle() . '</a>';
 	}
 
+	/**
+	 * Render the item's attributes.
+	 *
+	 * @return string
+	 */
 	public function renderAttributes()
 	{
 		$attributes = $this->attributes;
@@ -52,11 +110,21 @@ class Item implements ItemInterface
 		return implode(' ', $strings);
 	}
 
+	/**
+	 * Render the item's URL.
+	 *
+	 * @return string
+	 */
 	public function renderUrl()
 	{
 		return $this->url;
 	}
 
+	/**
+	 * Render the item's title.
+	 *
+	 * @return string
+	 */
 	public function renderTitle()
 	{
 		$prepend = '';
@@ -66,11 +134,21 @@ class Item implements ItemInterface
 		return $prepend . e($this->title);
 	}
 
+	/**
+	 * Render the item.
+	 *
+	 * @return string
+	 */
 	public function render()
 	{
 		return $this->renderLink();
 	}
 
+	/**
+	 * Cast the item to a string.
+	 *
+	 * @return string
+	 */
 	public function __toString()
 	{
 		return $this->render();

@@ -1,14 +1,39 @@
 <?php
+/**
+ * PHP Menu Builder
+ * 
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  php-menu
+ */
 
 namespace anlutro\Menu;
 
 use Illuminate\Support\Str;
 
+/**
+ * The top-level menu builder that contains information about the whole menu
+ * system.
+ */
 class Builder
 {
+	/**
+	 * The menus.
+	 *
+	 * @var array
+	 */
 	protected $menus = [];
+
+	/**
+	 * The class to apply by default to top-level menus.
+	 *
+	 * @var string
+	 */
 	protected $topMenuClass = 'nav navbar-nav';
 
+	/**
+	 * @param array $options
+	 */
 	public function __construct(array $options = array())
 	{
 		if (isset($options['top-menu-class'])) {
@@ -22,7 +47,7 @@ class Builder
 	 * @param  string $key
 	 * @param  array  $attributes
 	 *
-	 * @return Collection
+	 * @return \anlutro\Menu\Collection
 	 */
 	public function createMenu($key, array $attributes = array())
 	{
@@ -41,7 +66,7 @@ class Builder
 	 *
 	 * @param  string $key
 	 *
-	 * @return Collection
+	 * @return \anlutro\Menu\Collection
 	 */
 	public function getMenu($key)
 	{
@@ -77,7 +102,7 @@ class Builder
 	 *
 	 * @param  array  $attributes
 	 *
-	 * @return Collection
+	 * @return \anlutro\Menu\Collection
 	 */
 	protected function makeMenuCollection(array $attributes)
 	{
