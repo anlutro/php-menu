@@ -49,10 +49,10 @@ class SubmenuItem implements ItemInterface
 	 * @param \anlutro\Menu\Collection $submenu
 	 * @param array  $attributes
 	 */
-	public function __construct($title, Collection $submenu = null, array $attributes = array())
+	public function __construct($title, Collection $submenu, array $attributes = array())
 	{
 		$this->title = $title;
-		$this->submenu = $submenu ?: new Collection(['class' => 'dropdown-menu']);
+		$this->submenu = $submenu;
 		$this->attributes = $this->parseAttributes($attributes);
 	}
 
@@ -69,7 +69,6 @@ class SubmenuItem implements ItemInterface
 
 		$out = array_except($in, ['glyphicon', 'href']);
 		$out['class'] = isset($in['class']) ? explode(' ', $in['class']) : [];
-		$out['class'][] = 'dropdown-toggle';
 		$out['id'] = isset($in['id']) ? $in['id'] : Str::slug($this->title);
 		$out['data-toggle'] = 'dropdown';
 		return $out;

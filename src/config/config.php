@@ -12,6 +12,16 @@ return array(
 	/**
 	 * The class to apply by default to top-level menus.
 	 */
-	'top-menu-class' => 'nav navbar-nav',
+	'topMenuClass' => 'nav navbar-nav',
+
+	/**
+	 * The class to apply by default to sub-menus.
+	 */
+	'subMenuClass' => 'dropdown-menu',
+
+	/**
+	 * The class to apply by default to sub-menus.
+	 */
+	'subMenuToggleClass' => 'dropdown-menu',
 
 );

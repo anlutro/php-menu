@@ -34,11 +34,34 @@ class Collection
 	protected $ids = [];
 
 	/**
-	 * @param array $attributes
+	 * The class to apply by default to sub-menus.
+	 *
+	 * @var string|null
 	 */
-	public function __construct(array $attributes = array())
+	protected $subMenuClass;
+
+	/**
+	 * The class to apply by default to sub-menu toggle links.
+	 *
+	 * @var string
+	 */
+	protected $subMenuToggleClass;
+
+	/**
+	 * @param array $attributes
+	 * @param array $options
+	 */
+	public function __construct(array $attributes = array(), array $options = array())
 	{
 		$this->attributes = $this->parseAttributes($attributes);
+
+		if (isset($options['subMenuClass'])) {
+			$this->subMenuClass = $options['subMenuClass'];
+		}
+
+		if (isset($options['subMenuToggleClass'])) {
+			$this->subMenuToggleClass = $options['subMenuToggleClass'];
+		}
 	}
 
 	/**
@@ -141,7 +164,15 @@ class Collection
 	 */
 	public function makeSubmenu($title, array $attributes = array())
 	{
-		return new SubmenuItem($title, null, $attributes);
+		$collection = new static(['class' => $this->subMenuClass]);
+
+		if (isset($attributes['class']) && strpos($attributes['class'], $this->subMenuToggleClass) === false) {
+			$attributes['class'] .= ' '.$this->subMenuToggleClass;
+		} else {
+			$attributes['class'] = $this->subMenuToggleClass;
+		}
+
+		return new SubmenuItem($title, $collection, $attributes);
 	}
 
 	/**

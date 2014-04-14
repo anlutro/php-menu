@@ -32,12 +32,34 @@ class Builder
 	protected $topMenuClass = 'nav navbar-nav';
 
 	/**
+	 * The class to apply by default to sub-menus.
+	 *
+	 * @var string
+	 */
+	protected $subMenuClass = 'dropdown-menu';
+
+	/**
+	 * The class to apply by default to sub-menu toggle links.
+	 *
+	 * @var string
+	 */
+	protected $subMenuToggleClass = 'dropdown-toggle';
+
+	/**
 	 * @param array $options
 	 */
 	public function __construct(array $options = array())
 	{
-		if (isset($options['top-menu-class'])) {
-			$this->topMenuClass = $options['top-menu-class'];
+		if (isset($options['topMenuClass'])) {
+			$this->topMenuClass = $options['topMenuClass'];
+		}
+
+		if (isset($options['subMenuClass'])) {
+			$this->subMenuClass = $options['subMenuClass'];
+		}
+
+		if (isset($options['subMenuToggleClass'])) {
+			$this->subMenuToggleClass = $options['subMenuToggleClass'];
 		}
 	}
 
@@ -106,6 +128,11 @@ class Builder
 	 */
 	protected function makeMenuCollection(array $attributes)
 	{
-		return new Collection($attributes);
+		$options = [
+			'subMenuClass' => $this->subMenuClass,
+			'subMenuToggleClass' => $this->subMenuToggleClass,
+		];
+
+		return new Collection($attributes, $options);
 	}
 }

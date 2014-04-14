@@ -6,7 +6,7 @@ class MenuSubmenuItemTest extends PHPUnit_Framework_TestCase
 {
 	public function makeItem($title, $submenu = null, array $attributes = array())
 	{
-		return new anlutro\Menu\SubmenuItem($title, $submenu, $attributes);
+		return new anlutro\Menu\SubmenuItem($title, $submenu ?: $this->makeCollection(), $attributes);
 	}
 
 	public function makeCollection()
@@ -39,7 +39,7 @@ class MenuSubmenuItemTest extends PHPUnit_Framework_TestCase
 		$item->addItem('Test Item 1', '/url-1');
 		$item->addItem('Test Item 2', '/url-2');
 		$str = $item->render();
-		$this->assertContains('<ul class="dropdown-menu"', $str);
+		$this->assertContains('<ul', $str);
 		$this->assertContains('Test Item 1', $str);
 		$this->assertContains('Test Item 2', $str);
 	}
