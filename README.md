@@ -18,11 +18,11 @@ Documentation is under construction.
 
 ```php
 $builder = new anlutro\Menu\Builder;
-$builder->createMenu('left');
-$builder->getMenu('left')->addItem('Foo Bar', URL::to('foo-bar'));
-$builder->getMenu('left')->addItem('Bar Baz', URL::to('bar-baz'));
-$builder->getMenu('left')->addSubmenu('Sub Menu');
-$builder->getMenu('left')->getItem('sub-menu')->addItem('Baz Foo', URL::to('baz-foo'));
+$menu = $builder->createMenu('left');
+$menu->addItem('Foo Bar', URL::to('foo-bar'));
+$menu->addItem('Bar Baz', URL::to('bar-baz'));
+$submenu = $menu->addSubmenu('Sub Menu');
+$submenu->addItem('Baz Foo', URL::to('baz-foo'));
 echo $builder->render('left');
 ```
 
