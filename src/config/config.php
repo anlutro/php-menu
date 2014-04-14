@@ -24,4 +24,14 @@ return array(
 	 */
 	'subMenuToggleClass' => 'dropdown-menu',
 
+	/**
+	 * Text to affix to sub-menu toggles.
+	 */
+	'subMenuToggleAffix' => '<b class="caret"></b>',
+
+	/**
+	 * Additional attributes to apply to sub-menu toggles.
+	 */
+	'subMenuToggleAttrs' => ['data-toggle' => 'dropdown'],
+
 );

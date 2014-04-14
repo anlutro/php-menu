@@ -46,6 +46,20 @@ class Builder
 	protected $subMenuToggleClass = 'dropdown-toggle';
 
 	/**
+	 * Text to affix to sub-menu toggles.
+	 * 
+	 * @var string
+	 */
+	protected $subMenuToggleAffix = '<b class="caret"></b>';
+
+	/**
+	 * Additional attributes to apply to sub-menu toggles.
+	 * 
+	 * @var array
+	 */
+	protected $subMenuToggleAttrs = ['data-toggle' => 'dropdown'];
+
+	/**
 	 * @param array $options
 	 */
 	public function __construct(array $options = array())
@@ -60,6 +74,14 @@ class Builder
 
 		if (isset($options['subMenuToggleClass'])) {
 			$this->subMenuToggleClass = $options['subMenuToggleClass'];
+		}
+
+		if (isset($options['subMenuToggleAffix'])) {
+			$this->subMenuToggleAffix = $options['subMenuToggleAffix'];
+		}
+
+		if (isset($options['subMenuToggleAttrs'])) {
+			$this->subMenuToggleAttrs = $options['subMenuToggleAttrs'];
 		}
 	}
 
@@ -131,6 +153,8 @@ class Builder
 		$options = [
 			'subMenuClass' => $this->subMenuClass,
 			'subMenuToggleClass' => $this->subMenuToggleClass,
+			'subMenuToggleAffix' => $this->subMenuToggleAffix,
+			'subMenuToggleAttrs' => $this->subMenuToggleAttrs,
 		];
 
 		return new Collection($attributes, $options);

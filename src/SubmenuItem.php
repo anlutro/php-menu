@@ -45,6 +45,13 @@ class SubmenuItem implements ItemInterface
 	protected $glyphicon;
 
 	/**
+	 * The submenu's affix.
+	 *
+	 * @var string
+	 */
+	protected $affix;
+
+	/**
 	 * @param string $title
 	 * @param \anlutro\Menu\Collection $submenu
 	 * @param array  $attributes
@@ -67,10 +74,13 @@ class SubmenuItem implements ItemInterface
 			$this->glyphicon = $in['glyphicon'];
 		}
 
-		$out = array_except($in, ['glyphicon', 'href']);
+		if (isset($in['affix'])) {
+			$this->affix = $in['affix'];
+		}
+
+		$out = array_except($in, ['glyphicon', 'href', 'affix']);
 		$out['class'] = isset($in['class']) ? explode(' ', $in['class']) : [];
 		$out['id'] = isset($in['id']) ? $in['id'] : Str::slug($this->title);
-		$out['data-toggle'] = 'dropdown';
 		return $out;
 	}
 
@@ -121,6 +131,18 @@ class SubmenuItem implements ItemInterface
 	}
 
 	/**
+	 * Render the items's affix.
+	 *
+	 * @return string
+	 */
+	public function renderAffix()
+	{
+		if ($this->affix) {
+			return ' '.$this->affix;
+		}
+	}
+
+	/**
 	 * Render the submenu item.
 	 *
 	 * @return string
@@ -132,8 +154,8 @@ class SubmenuItem implements ItemInterface
 			$prepend = "<span class=\"glyphicon glyphicon-{$this->glyphicon}\"></span> ";
 		}
 		return '<a href="#" ' . $this->renderAttributes() . '>' .
-			$prepend . $this->renderTitle() . ' <b class="caret"></b></a>' .
-			$this->submenu->render();
+			$prepend . $this->renderTitle() . $this->renderAffix() .
+			'</a>' . $this->submenu->render();
 	}
 
 	/**

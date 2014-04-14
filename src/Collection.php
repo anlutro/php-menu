@@ -48,6 +48,20 @@ class Collection
 	protected $subMenuToggleClass;
 
 	/**
+	 * Text to affix to sub-menu toggles.
+	 * 
+	 * @var string
+	 */
+	protected $subMenuToggleAffix;
+
+	/**
+	 * Additional attributes to apply to sub-menu toggles.
+	 * 
+	 * @var array
+	 */
+	protected $subMenuToggleAttrs;
+
+	/**
 	 * @param array $attributes
 	 * @param array $options
 	 */
@@ -61,6 +75,14 @@ class Collection
 
 		if (isset($options['subMenuToggleClass'])) {
 			$this->subMenuToggleClass = $options['subMenuToggleClass'];
+		}
+
+		if (isset($options['subMenuToggleAffix'])) {
+			$this->subMenuToggleAffix = $options['subMenuToggleAffix'];
+		}
+
+		if (isset($options['subMenuToggleAttrs'])) {
+			$this->subMenuToggleAttrs = $options['subMenuToggleAttrs'];
 		}
 	}
 
@@ -170,6 +192,12 @@ class Collection
 			$attributes['class'] .= ' '.$this->subMenuToggleClass;
 		} else {
 			$attributes['class'] = $this->subMenuToggleClass;
+		}
+
+		$attributes = array_merge($this->subMenuToggleAttrs, $attributes);
+
+		if ($this->subMenuToggleAffix) {
+			$attributes['affix'] = $this->subMenuToggleAffix;
 		}
 
 		return new SubmenuItem($title, $collection, $attributes);
