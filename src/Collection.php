@@ -59,7 +59,7 @@ class Collection
 	 * 
 	 * @var array
 	 */
-	protected $subMenuToggleAttrs;
+	protected $subMenuToggleAttrs = [];
 
 	/**
 	 * @param array $attributes

@@ -114,7 +114,39 @@ class Builder
 	 */
 	public function getMenu($key)
 	{
+		if (strpos($key, '.') !== false) {
+			return $this->getNested($key);
+		}
+
 		return array_key_exists($key, $this->menus) ? $this->menus[$key] : null;
+	}
+
+	/**
+	 * Get a nested menu.
+	 *
+	 * @param  string $key
+	 *
+	 * @return mixed
+	 */
+	protected function getNested($key)
+	{
+		$segments = explode('.', $key);
+		$data = $this->getMenu(array_shift($segments));
+		if (!$data) return null;
+
+		foreach ($segments as $key) {
+			if ($data instanceof SubmenuItem) {
+				$data = $data->getSubmenu();
+			}
+
+			if ($data instanceof Collection) {
+				$data = $data->getItem($key);
+			}  else {
+				return null;
+			}
+		}
+
+		return $data;
 	}
 
 	/**
@@ -126,6 +158,10 @@ class Builder
 	 */
 	public function hasMenu($key)
 	{
+		if (strpos($key, '.') !== false) {
+			return $this->getNested($key) !== null;
+		}
+
 		return array_key_exists($key, $this->menus);
 	}
 
