@@ -31,18 +31,11 @@ abstract class AbstractItem
 	protected $attributes = [];
 
 	/**
-	 * The glyphicon of the item.
+	 * The icon associated with the item.
 	 *
-	 * @var string
+	 * @var \anlutro\Menu\Icons\IconInterface
 	 */
-	protected $glyphicon;
-
-	/**
-	 * The font awesome icon of the item.
-	 *
-	 * @var string
-	 */
-	protected $fontAwesome;
+	protected $icon;
 
 	/**
 	 * @param  array  $in
@@ -51,15 +44,15 @@ abstract class AbstractItem
 	 */
 	protected function parseAttributes(array $in)
 	{
-		if (isset($in['glyphicon'])) {
-			$this->glyphicon = $in['glyphicon'];
+		if (isset($in['icon']) && $in['icon'] instanceof Icon\IconInterface) {
+			$this->icon = $in['icon'];
+		} else if (isset($in['glyphicon'])) {
+			$this->icon = new Icons\Glyphicon($in['glyphicon']);
+		} else if (isset($in['fa-icon'])) {
+			$this->icon = new Icons\FontAwesomeIcon($in['fa-icon']);
 		}
 
-		if (isset($in['fa-icon'])) {
-			$this->fontAwesome = $in['fa-icon'];
-		}
-
-		$out = array_except($in, ['glyphicon', 'fa-icon', 'href', 'affix']);
+		$out = array_except($in, ['icon', 'glyphicon', 'fa-icon', 'fa-stack', 'href', 'affix']);
 		$out['class'] = isset($in['class']) ? explode(' ', $in['class']) : [];
 		$out['id'] = isset($in['id']) ? $in['id'] : Str::slug($this->title);
 		return $out;
@@ -82,8 +75,12 @@ abstract class AbstractItem
 	 */
 	public function renderLink()
 	{
+		if ($icon = $this->renderIcon()) {
+			$icon .= ' ';
+		}
+
 		return '<a href="' . $this->renderUrl() . '" ' .$this->renderAttributes() .
-			'>' . $this->renderTitle() . '</a>';
+			'>' . $icon . $this->renderTitle() . '</a>';
 	}
 
 	/**
@@ -110,23 +107,23 @@ abstract class AbstractItem
 	}
 
 	/**
+	 * Render the item's icon.
+	 *
+	 * @return string
+	 */
+	public function renderIcon()
+	{
+		return $this->icon ? $this->icon->render() : '';
+	}
+
+	/**
 	 * Render the item's title.
 	 *
 	 * @return string
 	 */
 	public function renderTitle()
 	{
-		$prepend = '';
-
-		if ($this->glyphicon) {
-			$prepend .= "<span class=\"glyphicon glyphicon-{$this->glyphicon}\"></span> ";
-		}
-
-		if ($this->fontAwesome) {
-			$prepend .= $this->renderFAIcon() . ' ';
-		}
-
-		return $prepend . e($this->title);
+		return e($this->title);
 	}
 
 	/**
@@ -134,15 +131,20 @@ abstract class AbstractItem
 	 *
 	 * @return string
 	 */
-	protected function renderFAIcon()
+	protected function renderFAIcon($icon)
 	{
 		$classes = array_map(function($class) use(&$stacked) {
 			return 'fa-'.$class;
-		}, explode(' ', $this->fontAwesome));
+		}, explode(' ', $icon));
 
 		array_unshift($classes, 'fa');
 
 		return '<i class="'.implode(' ', $classes).'"></i>';
+	}
+
+	protected function renderFAStack($stack)
+	{
+		
 	}
 
 	/**
