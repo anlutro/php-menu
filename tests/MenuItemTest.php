@@ -40,4 +40,26 @@ class MenuItemTest extends PHPUnit_Framework_TestCase
 		$item = $this->makeItem('foo', 'bar', ['fa-icon' => 'baz 4x']);
 		$this->assertEquals('<a href="bar" id="foo"><i class="fa fa-baz fa-4x"></i> foo</a>', $item->render());
 	}
+
+	public function testCustomIconResolver()
+	{
+		\anlutro\Menu\Item::addIconResolvers(['custom' => 'CustomIcon']);
+		$item = $this->makeItem('foo', 'bar', ['custom' => 'baz']);
+		$this->assertEquals('<a href="bar" id="foo">custom-icon foo</a>', $item->render());
+		$item = $this->makeItem('foo', 'bar', ['custom' => 'baz', 'glyphicon' => 'baz']);
+		$this->assertEquals('<a href="bar" id="foo">custom-icon foo</a>', $item->render());
+	}
+}
+
+class CustomIcon implements \anlutro\Menu\ItemInterface
+{
+	public function render()
+	{
+		return 'custom-icon';
+	}
+
+	public static function createFromAttribute()
+	{
+		return new static;
+	}
 }

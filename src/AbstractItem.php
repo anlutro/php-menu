@@ -38,6 +38,39 @@ abstract class AbstractItem
 	protected $icon;
 
 	/**
+	 * Array of icon resolvers.
+	 *
+	 * @var array
+	 */
+	protected static $iconResolvers = [
+		'glyph' => 'anlutro\Menu\Icons\Glyphicon',
+		'glyphicon' => 'anlutro\Menu\Icons\Glyphicon',
+		'fa-icon' => 'anlutro\Menu\Icons\FontAwesomeIcon',
+		'fa-stack' => 'anlutro\Menu\Icons\FontAwesomeStack',
+	];
+
+	/**
+	 * Array keys of attributes that are not HTML attributes.
+	 *
+	 * @var array
+	 */
+	protected static $notHtmlAttributes = [
+		'icon', 'href', 'affix', 'prefix', 'glyph',
+		'glyphicon', 'fa-icon', 'fa-stack'
+	];
+
+	/**
+	 * Add an array of icon resolvers.
+	 *
+	 * @param array $resolvers
+	 */
+	public static function addIconResolvers(array $resolvers)
+	{
+		static::$iconResolvers = $resolvers + static::$iconResolvers;
+		static::$notHtmlAttributes = array_merge(['icon', 'href', 'affix', 'prefix'], array_keys(static::$iconResolvers));
+	}
+
+	/**
 	 * @param  array  $in
 	 *
 	 * @return array
@@ -46,13 +79,16 @@ abstract class AbstractItem
 	{
 		if (isset($in['icon']) && $in['icon'] instanceof Icon\IconInterface) {
 			$this->icon = $in['icon'];
-		} else if (isset($in['glyphicon'])) {
-			$this->icon = Icons\Glyphicon::createFromAttribute($in['glyphicon']);
-		} else if (isset($in['fa-icon'])) {
-			$this->icon = Icons\FontAwesomeIcon::createFromAttribute($in['fa-icon']);
+		} else {
+			foreach (static::$iconResolvers as $key => $resolver) {
+				if (array_key_exists($key, $in)) {
+					$this->icon = $resolver::createFromAttribute($in[$key]);
+					break;
+				}
+			}
 		}
 
-		$out = array_except($in, ['icon', 'glyphicon', 'fa-icon', 'fa-stack', 'href', 'affix']);
+		$out = array_except($in, static::$notHtmlAttributes);
 		$out['class'] = isset($in['class']) ? explode(' ', $in['class']) : [];
 		$out['id'] = isset($in['id']) ? $in['id'] : Str::slug($this->title);
 		return $out;
@@ -124,27 +160,6 @@ abstract class AbstractItem
 	public function renderTitle()
 	{
 		return e($this->title);
-	}
-
-	/**
-	 * Render the item's font awesome icon.
-	 *
-	 * @return string
-	 */
-	protected function renderFAIcon($icon)
-	{
-		$classes = array_map(function($class) use(&$stacked) {
-			return 'fa-'.$class;
-		}, explode(' ', $icon));
-
-		array_unshift($classes, 'fa');
-
-		return '<i class="'.implode(' ', $classes).'"></i>';
-	}
-
-	protected function renderFAStack($stack)
-	{
-		
 	}
 
 	/**

@@ -195,4 +195,9 @@ class Builder
 
 		return new Collection($attributes, $options);
 	}
+
+	public function addIconResolvers(array $resolvers)
+	{
+		Item::addIconResolvers($resolvers);
+	}
 }
