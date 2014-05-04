@@ -1,4 +1,4 @@
-# Menu Builder
+# Menu Builder [![Build Status](https://travis-ci.org/anlutro/php-menu.png?branch=master)](https://travis-ci.org/anlutro/php-menu)  [![Latest Version](http://img.shields.io/github/tag/anlutro/php-menu.svg)](https://github.com/anlutro/php-menu/releases)
 
 Simple dynamic menu building system.
 
