@@ -83,6 +83,10 @@ class Builder
 		if (isset($options['subMenuToggleAttrs'])) {
 			$this->subMenuToggleAttrs = $options['subMenuToggleAttrs'];
 		}
+
+		if (isset($options['iconResolvers'])) {
+			$this->addIconResolvers($options['iconResolvers']);
+		}
 	}
 
 	/**

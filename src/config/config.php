@@ -34,4 +34,9 @@ return array(
 	 */
 	'subMenuToggleAttrs' => ['data-toggle' => 'dropdown'],
 
+	/**
+	 * Optional array of custom icon classes.
+	 */
+	'iconResolvers' => [],
+
 );
