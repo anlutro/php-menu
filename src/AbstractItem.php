@@ -47,9 +47,9 @@ abstract class AbstractItem
 		if (isset($in['icon']) && $in['icon'] instanceof Icon\IconInterface) {
 			$this->icon = $in['icon'];
 		} else if (isset($in['glyphicon'])) {
-			$this->icon = new Icons\Glyphicon($in['glyphicon']);
+			$this->icon = Icons\Glyphicon::createFromAttribute($in['glyphicon']);
 		} else if (isset($in['fa-icon'])) {
-			$this->icon = new Icons\FontAwesomeIcon($in['fa-icon']);
+			$this->icon = Icons\FontAwesomeIcon::createFromAttribute($in['fa-icon']);
 		}
 
 		$out = array_except($in, ['icon', 'glyphicon', 'fa-icon', 'fa-stack', 'href', 'affix']);

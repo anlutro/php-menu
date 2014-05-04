@@ -1,13 +1,26 @@
 <?php
+/**
+ * PHP Menu Builder
+ * 
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  php-menu
+ */
+
 namespace anlutro\Menu\Icons;
 
 class FontAwesomeIcon implements IconInterface
 {
 	protected $classes;
 
-	public function __construct($icon)
+	public function __construct(array $classes)
 	{
-		$this->classes = explode(' ', $icon);
+		$this->classes = $classes;
+	}
+
+	public static function createFromAttribute($attribute)
+	{
+		return new static(explode(' ', $attribute));
 	}
 
 	public function render()
