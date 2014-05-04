@@ -31,4 +31,13 @@ class MenuItemTest extends PHPUnit_Framework_TestCase
 		$item = $this->makeItem('foo', 'bar', ['glyphicon' => 'baz']);
 		$this->assertEquals('<span class="glyphicon glyphicon-baz"></span> foo', $item->renderTitle());
 	}
+
+	public function testRenderFAIcon()
+	{
+		$item = $this->makeItem('foo', 'bar', ['fa-icon' => 'baz']);
+		$this->assertEquals('<i class="fa fa-baz"></i> foo', $item->renderTitle());
+		
+		$item = $this->makeItem('foo', 'bar', ['fa-icon' => 'baz 4x']);
+		$this->assertEquals('<i class="fa fa-baz fa-4x"></i> foo', $item->renderTitle());
+	}
 }

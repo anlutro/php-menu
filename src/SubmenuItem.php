@@ -14,35 +14,14 @@ use Illuminate\Support\Str;
 /**
  * A menu submenu item.
  */
-class SubmenuItem implements ItemInterface
+class SubmenuItem extends AbstractItem implements ItemInterface
 {
-	/**
-	 * The title of the submenu.
-	 *
-	 * @var string
-	 */
-	protected $title;
-
 	/**
 	 * The submenu items.
 	 *
 	 * @var \anlutro\Menu\Collection
 	 */
 	protected $submenu;
-
-	/**
-	 * The submenu attributes.
-	 *
-	 * @var array
-	 */
-	protected $attributes = [];
-
-	/**
-	 * The submenu's glyphicon.
-	 *
-	 * @var string
-	 */
-	protected $glyphicon;
 
 	/**
 	 * The submenu's affix.
@@ -64,34 +43,17 @@ class SubmenuItem implements ItemInterface
 	}
 
 	/**
-	 * @param  array  $in
-	 *
-	 * @return array
+	 * {@inheritdoc}
 	 */
 	protected function parseAttributes(array $in)
 	{
-		if (isset($in['glyphicon'])) {
-			$this->glyphicon = $in['glyphicon'];
-		}
-
 		if (isset($in['affix'])) {
 			$this->affix = $in['affix'];
 		}
 
-		$out = array_except($in, ['glyphicon', 'href', 'affix']);
-		$out['class'] = isset($in['class']) ? explode(' ', $in['class']) : [];
-		$out['id'] = isset($in['id']) ? $in['id'] : Str::slug($this->title);
-		return $out;
-	}
+		$out = parent::parseAttributes($in);
 
-	/**
-	 * Get the menu item's identifier.
-	 *
-	 * @return string
-	 */
-	public function getId()
-	{
-		return $this->attributes['id'];
+		return $out;
 	}
 
 	/**
@@ -105,67 +67,28 @@ class SubmenuItem implements ItemInterface
 	}
 
 	/**
-	 * Render the menu's attributes.
-	 *
-	 * @return string
+	 * {@inheritdoc}
 	 */
-	public function renderAttributes()
+	public function renderUrl()
 	{
-		$attributes = $this->attributes;
-		$attributes['class'] = implode(' ', $this->attributes['class']);
-		$strings = [];
-		foreach ($attributes as $key => $value) {
-			if (!empty($value)) $strings[] = "$key=\"$value\"";
-		}
-		return implode(' ', $strings);
+		return '#';
 	}
 
 	/**
-	 * Render the item's title.
-	 *
-	 * @return string
+	 * {@inheritdoc}
 	 */
 	public function renderTitle()
 	{
-		return e($this->title);
+		$affix = $this->affix ? ' '.$this->affix : '';
+		return parent::renderTitle() . $affix;
 	}
 
 	/**
-	 * Render the items's affix.
-	 *
-	 * @return string
-	 */
-	public function renderAffix()
-	{
-		if ($this->affix) {
-			return ' '.$this->affix;
-		}
-	}
-
-	/**
-	 * Render the submenu item.
-	 *
-	 * @return string
+	 * {@inheritdoc}
 	 */
 	public function render()
 	{
-		$prepend = '';
-		if ($this->glyphicon) {
-			$prepend = "<span class=\"glyphicon glyphicon-{$this->glyphicon}\"></span> ";
-		}
-		return '<a href="#" ' . $this->renderAttributes() . '>' .
-			$prepend . $this->renderTitle() . $this->renderAffix() .
-			'</a>' . $this->submenu->render();
-	}
-
-	/**
-	 * Cast the submenu item to a string.
-	 *
-	 * @return string
-	 */
-	public function __toString()
-	{
-		return $this->render();
+		return parent::render() . $this->submenu->render();
 	}
 
 	/**
