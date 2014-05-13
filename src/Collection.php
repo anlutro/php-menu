@@ -227,6 +227,16 @@ class Collection
 	}
 
 	/**
+	 * Determine whether the menu collection is currently empty or not.
+	 *
+	 * @return boolean
+	 */
+	public function isEmpty()
+	{
+		return empty($this->items);
+	}
+
+	/**
 	 * Render the menu as an unordered list.
 	 *
 	 * @return string
