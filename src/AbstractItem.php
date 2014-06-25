@@ -90,7 +90,7 @@ abstract class AbstractItem
 
 		$out = array_except($in, static::$notHtmlAttributes);
 		$out['class'] = isset($in['class']) ? explode(' ', $in['class']) : [];
-		$out['id'] = isset($in['id']) ? $in['id'] : Str::slug($this->title);
+		$out['id'] = isset($in['id']) ? $in['id'] : 'menu-item-' . Str::slug($this->title);
 		return $out;
 	}
 
