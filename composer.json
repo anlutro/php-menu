@@ -11,15 +11,16 @@
 	"require": {
 		"php": ">=5.4.0",
 		"illuminate/support": "~4.1",
-		"patchwork/utf8": "*"
+		"patchwork/utf8": "1.1.*"
 	},
 	"require-dev": {
-		"mockery/mockery": "dev-master"
+		"mockery/mockery": "0.9.*"
 	},
 	"autoload": {
 		"psr-4": {
 			"anlutro\\Menu\\": "src/"
 		}
 	},
-	"minimum-stability": "stable"
+	"minimum-stability": "dev",
+	"prefer-stable": true
 }
