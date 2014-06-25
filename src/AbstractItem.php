@@ -90,7 +90,7 @@ abstract class AbstractItem
 
 		$out = array_except($in, static::$notHtmlAttributes);
 		$out['class'] = isset($in['class']) ? explode(' ', $in['class']) : [];
-		$out['id'] = isset($in['id']) ? $in['id'] : 'menu-item-' . Str::slug($this->title);
+		$out['id'] = isset($in['id']) ? $in['id'] : Str::slug($this->title);
 		return $out;
 	}
 
@@ -134,6 +134,9 @@ abstract class AbstractItem
 	public function renderAttributes()
 	{
 		$attributes = $this->attributes;
+		if (isset($attributes['id']) && !Str::startsWith('menu-item--', $attributes['id'])) {
+			$attributes['id'] = 'menu-item--'.$attributes['id'];
+		}
 		$attributes['class'] = implode(' ', $this->attributes['class']);
 		$strings = [];
 		foreach ($attributes as $key => $value) {

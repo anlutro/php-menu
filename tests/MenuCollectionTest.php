@@ -50,8 +50,8 @@ class MenuCollectionTest extends PHPUnit_Framework_TestCase
 		$this->assertContains('Second Item', $str);
 		$this->assertContains('<a href="/foo-bar', $str);
 		$this->assertContains('<a href="/bar-baz', $str);
-		$this->assertContains('id="test-item"', $str);
-		$this->assertContains('id="second-item"', $str);
+		$this->assertContains('id="menu-item--test-item"', $str);
+		$this->assertContains('id="menu-item--second-item"', $str);
 	}
 
 	public function testAddWithPriorities()

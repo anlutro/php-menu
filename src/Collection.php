@@ -94,9 +94,6 @@ class Collection
 	protected function parseAttributes(array $in)
 	{
 		$out = $in;
-		if (isset($in['id']) && !Str::startsWith('menu-', $in['id'])) {
-			$out['id'] = 'menu-' . $in['id'];
-		}
 		$out['class'] = isset($in['class']) ? explode(' ', $in['class']) : [];
 		return $out;
 	}
@@ -109,6 +106,9 @@ class Collection
 	public function renderAttributes()
 	{
 		$attributes = $this->attributes;
+		if (isset($attributes['id']) && !Str::startsWith('menu--', $attributes['id'])) {
+			$attributes['id'] = 'menu--'.$attributes['id'];
+		}
 		$attributes['class'] = implode(' ', $this->attributes['class']);
 		$strings = [];
 		foreach ($attributes as $key => $value) {
