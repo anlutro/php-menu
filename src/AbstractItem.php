@@ -77,9 +77,10 @@ abstract class AbstractItem
 	 */
 	protected function parseAttributes(array $in)
 	{
-		if (isset($in['icon']) && $in['icon'] instanceof Icon\IconInterface) {
+		if (isset($in['icon']) && $in['icon'] instanceof Icons\IconInterface) {
 			$this->icon = $in['icon'];
 		} else {
+			/** @var Icons\IconInterface $resolver */
 			foreach (static::$iconResolvers as $key => $resolver) {
 				if (array_key_exists($key, $in)) {
 					$this->icon = $resolver::createFromAttribute($in[$key]);

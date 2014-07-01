@@ -51,14 +51,14 @@ class MenuItemTest extends PHPUnit_Framework_TestCase
 	}
 }
 
-class CustomIcon implements \anlutro\Menu\ItemInterface
+class CustomIcon implements \anlutro\Menu\Icons\IconInterface
 {
 	public function render()
 	{
 		return 'custom-icon';
 	}
 
-	public static function createFromAttribute()
+	public static function createFromAttribute($attribute)
 	{
 		return new static;
 	}

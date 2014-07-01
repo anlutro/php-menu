@@ -11,5 +11,17 @@ namespace anlutro\Menu;
 
 interface ItemInterface
 {
+	/**
+	 * Render the item.
+	 *
+	 * @return string
+	 */
 	public function render();
+
+	/**
+	 * Get the unique ID string for the item.
+	 *
+	 * @return string
+	 */
+	public function getId();
 }

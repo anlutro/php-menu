@@ -11,7 +11,14 @@ namespace anlutro\Menu\Icons;
 
 class FontAwesomeStack implements IconInterface
 {
+	/**
+	 * @var IconInterface[]
+	 */
 	protected $icons;
+
+	/**
+	 * @var string[]
+	 */
 	protected $classes = ['stack'];
 
 	public function __construct(array $icons, array $classes = array())

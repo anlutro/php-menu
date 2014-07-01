@@ -22,7 +22,7 @@ class Collection
 	/**
 	 * The menu items.
 	 *
-	 * @var array
+	 * @var ItemInterface[]
 	 */
 	protected $items = [];
 
@@ -246,10 +246,13 @@ class Collection
 		$items = '';
 		$sorted = $this->items;
 		ksort($sorted);
+
+		/** @var ItemInterface $item */
 		foreach (array_flatten($sorted) as $item) {
 			if ($item === static::DIVIDER) $items .= '<li class="divider"></li>';
 			else $items .= '<li>'.$item->render().'</li>';
 		}
+
 		return '<ul '.$this->renderAttributes().'>'.$items.'</ul>';
 	}
 }
