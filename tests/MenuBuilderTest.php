@@ -31,12 +31,12 @@ class MenuBuilderTest extends PHPUnit_Framework_TestCase
 	public function testRenderSimpleMenu()
 	{
 		$builder = $this->makeBuilder();
-		$builder->createMenu('left');
-		$builder->getMenu('left')->addItem('Test Item 1', '/url-1', ['class' => 'foo-bar']);
-		$builder->getMenu('left')->addItem('Test Item 2', '/url-2', ['data-foo' => 'bar']);
-		$builder->getMenu('left')->addSubmenu('Test Submenu');
-		$builder->getMenu('left')->getItem('test-submenu')->addItem('Test Item 3', '/url-3');
-		$builder->getMenu('left')->getItem('test-submenu')->addItem('Test Item 4', '/url-4');
+		$menu = $builder->createMenu('left');
+		$menu->addItem('Test Item 1', '/url-1', ['class' => 'foo-bar']);
+		$menu->addItem('Test Item 2', '/url-2', ['data-foo' => 'bar']);
+		$menu->addSubmenu('Test Submenu');
+		$menu->getItem('test-submenu')->addItem('Test Item 3', '/url-3');
+		$menu->getItem('test-submenu')->addItem('Test Item 4', '/url-4');
 		$str = $builder->render('left');
 		$expected = str_replace(["\n","\t"], '', '<ul id="menu--left" class="nav navbar-nav">
 		<li><a href="/url-1" class="foo-bar" id="menu-item--test-item-1">Test Item 1</a></li>
