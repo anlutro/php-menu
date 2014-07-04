@@ -22,7 +22,7 @@ return array(
 	/**
 	 * The class to apply by default to sub-menus.
 	 */
-	'subMenuToggleClass' => 'dropdown-menu',
+	'subMenuToggleClass' => 'dropdown-toggle',
 
 	/**
 	 * Text to affix to sub-menu toggles.
