@@ -62,6 +62,6 @@ class MenuCollectionTest extends PHPUnit_Framework_TestCase
 
 		$str = $coll->render();
 		$this->assertTrue(strpos($str, 'First Item') > strpos($str, 'Second Item'),
-			'Second Item should come before First Item.');
+			'Second Item should come before First Item.'.PHP_EOL.$str);
 	}
 }

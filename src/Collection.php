@@ -20,9 +20,9 @@ class Collection
 	const DIVIDER = 'divider';
 
 	/**
-	 * The menu items.
+	 * The menu items, stored in a multidimensional array of location => items
 	 *
-	 * @var ItemInterface[]
+	 * @var ItemInterface[][]
 	 */
 	protected $items = [];
 
@@ -121,14 +121,14 @@ class Collection
 	 * Add a new ItemInterface instance to the collection.
 	 *
 	 * @param  ItemInterface $item
-	 * @param  int           $priority
+	 * @param  int           $location
 	 *
 	 * @return \anlutro\Menu\ItemInterface $item
 	 */
-	public function addItemInstance(ItemInterface $item, $priority = null)
+	public function addItemInstance(ItemInterface $item, $location = null)
 	{
-		$priority = (int) $priority;
-		$this->items[$priority][] = $item;
+		$location = (int) $location;
+		$this->items[$location][] = $item;
 		$this->ids[$item->getId()] = $item;
 		return $item;
 	}
@@ -139,13 +139,13 @@ class Collection
 	 * @param  string $title
 	 * @param  string $url
 	 * @param  array  $attributes
-	 * @param  int    $priority
+	 * @param  int    $location
 	 *
 	 * @return \anlutro\Menu\Item
 	 */
-	public function addItem($title, $url, array $attributes = array(), $priority = null)
+	public function addItem($title, $url, array $attributes = array(), $location = null)
 	{
-		return $this->addItemInstance($this->makeItem($title, $url, $attributes), $priority);
+		return $this->addItemInstance($this->makeItem($title, $url, $attributes), $location);
 	}
 
 	/**
@@ -167,13 +167,13 @@ class Collection
 	 *
 	 * @param  string $title
 	 * @param  array  $attributes
-	 * @param  int    $priority
+	 * @param  int    $location
 	 *
 	 * @return \anlutro\Menu\SubmenuItem
 	 */
-	public function addSubmenu($title, array $attributes = array(), $priority = null)
+	public function addSubmenu($title, array $attributes = array(), $location = null)
 	{
-		return $this->addItemInstance($this->makeSubmenu($title, $attributes), $priority);
+		return $this->addItemInstance($this->makeSubmenu($title, $attributes), $location);
 	}
 
 	/**
@@ -206,12 +206,12 @@ class Collection
 	/**
 	 * Add a divider to the items.
 	 *
-	 * @param  int  $priority
+	 * @param  int  $location
 	 */
-	public function addDivider($priority = null)
+	public function addDivider($location = null)
 	{
-		$priority = (int) $priority;
-		$this->items[$priority][] = static::DIVIDER;
+		$location = (int) $location;
+		$this->items[$location][] = static::DIVIDER;
 	}
 
 	/**
