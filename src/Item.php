@@ -35,6 +35,11 @@ class Item extends AbstractItem implements ItemInterface
 		$this->attributes = $this->parseAttributes($attributes);
 	}
 
+	public function getUrl()
+	{
+		return $this->url;
+	}
+
 	/**
 	 * Render the item's URL.
 	 *

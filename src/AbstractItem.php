@@ -105,6 +105,16 @@ abstract class AbstractItem
 		return $this->attributes['id'];
 	}
 
+	public function getTitle()
+	{
+		return $this->title;
+	}
+
+	public function getAttributes()
+	{
+		return $this->attributes;
+	}
+
 	/**
 	 * Render the item as a link.
 	 *

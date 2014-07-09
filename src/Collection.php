@@ -98,6 +98,11 @@ class Collection
 		return $out;
 	}
 
+	public function getAttributes()
+	{
+		return $this->attributes;
+	}
+
 	/**
 	 * Render the menu's attributes.
 	 *
@@ -236,6 +241,13 @@ class Collection
 		return empty($this->items);
 	}
 
+	public function getSortedItems()
+	{
+		$sorted = $this->items;
+		ksort($sorted);
+		return array_flatten($sorted);
+	}
+
 	/**
 	 * Render the menu as an unordered list.
 	 *
@@ -244,11 +256,9 @@ class Collection
 	public function render()
 	{
 		$items = '';
-		$sorted = $this->items;
-		ksort($sorted);
 
 		/** @var ItemInterface $item */
-		foreach (array_flatten($sorted) as $item) {
+		foreach ($this->getSortedItems() as $item) {
 			if ($item === static::DIVIDER) $items .= '<li class="divider"></li>';
 			else $items .= '<li>'.$item->render().'</li>';
 		}
