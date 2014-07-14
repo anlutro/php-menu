@@ -34,11 +34,11 @@ class ListRenderer
 		}
 
 		if ($item instanceof SubmenuItem) {
-			$submenuLink = $this->renderAnchor($item->renderIcon().$item->getTitle().$this->getSubmenuAffix(), '#', $this->getSubmenuAnchorAttributes($item));
+			$submenuLink = $this->renderAnchor($this->getSubmenuTitle($item), '#', $this->getSubmenuAnchorAttributes($item));
 			return $this->renderListItem($submenuLink.$this->renderSubmenu($item->getSubmenu()), $this->getSubmenuItemAttributes($item));
 		}
 
-		return $this->renderListItem($this->renderAnchor($item->renderIcon().$item->getTitle(), $item->getUrl(), $this->getItemAnchorAttributes($item)));
+		return $this->renderListItem($this->renderAnchor($this->getMenuTitle($item), $item->getUrl(), $this->getItemAnchorAttributes($item)));
 	}
 
 	public function renderUnorderedList($items, array $attributes = array())
@@ -54,6 +54,16 @@ class ListRenderer
 	public function renderAnchor($title, $href, array $attributes)
 	{
 		return '<a'.$this->attributes(['href' => $href] + $attributes).'>'.$title.'</a>';
+	}
+
+	public function getMenuTitle($item)
+	{
+		return $item->renderIcon().e($item->getTitle());
+	}
+
+	public function getSubmenuTitle($item)
+	{
+		return $this->getMenuTitle($item).$this->getSubmenuAffix();
 	}
 
 	public function getMenuAttributes($menu)
@@ -76,7 +86,7 @@ class ListRenderer
 
 	public function getDividerAttributes()
 	{
-		return ['class' => 'divider'];
+		return [];
 	}
 
 	public function getItemAnchorAttributes($item)
