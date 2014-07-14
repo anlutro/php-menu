@@ -6,7 +6,7 @@ class MenuCollectionTest extends PHPUnit_Framework_TestCase
 {
 	public function makeCollection()
 	{
-		return new anlutro\Menu\Collection;
+		return new anlutro\Menu\Collection(new \anlutro\Menu\Builder());
 	}
 
 	public function testAddedItemsAreStored()

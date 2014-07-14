@@ -34,11 +34,11 @@ class ListRenderer
 		}
 
 		if ($item instanceof SubmenuItem) {
-			$submenuLink = $this->renderAnchor($item->getTitle().$this->getSubmenuAffix(), '#', $this->getSubmenuAnchorAttributes($item));
-			return $this->renderListItem($submenuLink.$this->renderSubmenu($item->getSubmenu()));
+			$submenuLink = $this->renderAnchor($item->renderIcon().$item->getTitle().$this->getSubmenuAffix(), '#', $this->getSubmenuAnchorAttributes($item));
+			return $this->renderListItem($submenuLink.$this->renderSubmenu($item->getSubmenu()), $this->getSubmenuItemAttributes($item));
 		}
 
-		return $this->renderListItem($this->renderAnchor($item->getTitle(), $item->getUrl(), $this->getItemAnchorAttributes($item)));
+		return $this->renderListItem($this->renderAnchor($item->renderIcon().$item->getTitle(), $item->getUrl(), $this->getItemAnchorAttributes($item)));
 	}
 
 	public function renderUnorderedList($items, array $attributes = array())
@@ -53,9 +53,7 @@ class ListRenderer
 
 	public function renderAnchor($title, $href, array $attributes)
 	{
-		$attributes['href'] = $href;
-
-		return '<a'.$this->attributes($attributes).'>'.$title.'</a>';
+		return '<a'.$this->attributes(['href' => $href] + $attributes).'>'.$title.'</a>';
 	}
 
 	public function getMenuAttributes($menu)
@@ -64,7 +62,7 @@ class ListRenderer
 		if (isset($attributes['id'])) {
 			$attributes['id'] = 'menu--'.$attributes['id'];
 		}
-		return $this->mergeAttributes($attributes, ['class' => 'nav navbar-nav']);
+		return $attributes;
 	}
 
 	public function getSubmenuAttributes($menu)
@@ -73,7 +71,7 @@ class ListRenderer
 		if (isset($attributes['id'])) {
 			$attributes['id'] = 'menu--'.$attributes['id'];
 		}
-		return $this->mergeAttributes($attributes, ['class' => 'dropdown-menu']);
+		return $attributes;
 	}
 
 	public function getDividerAttributes()
@@ -92,20 +90,40 @@ class ListRenderer
 
 	public function getSubmenuAffix()
 	{
-		return '<b class="caret"></b>';
+		return '';
 	}
 
 	public function getSubmenuAnchorAttributes($item)
 	{
-		return ['class' => 'dropdown-toggle', 'data-toggle' => 'dropdown'];
+		$attributes = $item->getAttributes();
+		if (isset($attributes['id'])) {
+			$attributes['id'] = 'menu-item--'.$attributes['id'];
+		}
+		return $attributes;
+	}
+
+	public function getSubmenuItemAttributes($item)
+	{
+		return [];
 	}
 
 	public function mergeAttributes(array $attributes, array $defaults)
 	{
 		if (isset($attributes['class']) && isset($defaults['class'])) {
-			$attributes['class'] += (array) $defaults['class'];
-			$attributes['class'] = implode(' ', array_unique($attributes['class']));
+			if (is_string($attributes['class'])) {
+				$attributes['class'] = explode(' ', $attributes['class']);
+			}
+			$attributes['class'] = array_filter($attributes['class']);
+
+			if (is_string($defaults['class'])) {
+				$defaults['class'] = explode(' ', $defaults['class']);
+			}
+			$defaults['class'] = array_filter($defaults['class']);
+
+			$attributes['class'] = implode(' ', array_unique($attributes['class'] + $defaults['class']));
+			unset($defaults['class']);
 		}
+
 		return $attributes + $defaults;
 	}
 
@@ -116,6 +134,9 @@ class ListRenderer
 		foreach ($attributes as $key => $value) {
 			if (is_array($value)) {
 				$value = implode(' ', $value);
+			}
+			if ($key == 'class' && $value == '') {
+				continue;
 			}
 			$str .= " $key=\"$value\"";
 		}

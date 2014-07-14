@@ -25,68 +25,19 @@ class Builder
 	protected $menus = [];
 
 	/**
-	 * The class to apply by default to top-level menus.
+	 * The name of the class of the default renderer to use.
 	 *
 	 * @var string
 	 */
-	protected $topMenuClass = 'nav navbar-nav';
+	protected $defaultRenderer;
 
 	/**
-	 * The class to apply by default to sub-menus.
-	 *
-	 * @var string
+	 * @param array  $options
+	 * @param string $defaultRenderer
 	 */
-	protected $subMenuClass = 'dropdown-menu';
-
-	/**
-	 * The class to apply by default to sub-menu toggle links.
-	 *
-	 * @var string
-	 */
-	protected $subMenuToggleClass = 'dropdown-toggle';
-
-	/**
-	 * Text to affix to sub-menu toggles.
-	 * 
-	 * @var string
-	 */
-	protected $subMenuToggleAffix = '<b class="caret"></b>';
-
-	/**
-	 * Additional attributes to apply to sub-menu toggles.
-	 * 
-	 * @var array
-	 */
-	protected $subMenuToggleAttrs = ['data-toggle' => 'dropdown'];
-
-	/**
-	 * @param array $options
-	 */
-	public function __construct(array $options = array())
+	public function __construct(array $options = array(), $defaultRenderer = null)
 	{
-		if (isset($options['topMenuClass'])) {
-			$this->topMenuClass = $options['topMenuClass'];
-		}
-
-		if (isset($options['subMenuClass'])) {
-			$this->subMenuClass = $options['subMenuClass'];
-		}
-
-		if (isset($options['subMenuToggleClass'])) {
-			$this->subMenuToggleClass = $options['subMenuToggleClass'];
-		}
-
-		if (isset($options['subMenuToggleAffix'])) {
-			$this->subMenuToggleAffix = $options['subMenuToggleAffix'];
-		}
-
-		if (isset($options['subMenuToggleAttrs'])) {
-			$this->subMenuToggleAttrs = $options['subMenuToggleAttrs'];
-		}
-
-		if (isset($options['iconResolvers'])) {
-			$this->addIconResolvers($options['iconResolvers']);
-		}
+		$this->defaultRenderer = $defaultRenderer ?: __NAMESPACE__.'\Renderers\BS3Renderer';
 	}
 
 	/**
@@ -104,7 +55,6 @@ class Builder
 		}
 
 		$attributes['id'] = isset($attributes['id']) ? $attributes['id'] : $key;
-		$attributes['class'] = isset($attributes['class']) ? $attributes['class'] : $this->topMenuClass;
 
 		return $this->menus[$key] = $this->makeMenuCollection($attributes);
 	}
@@ -174,11 +124,29 @@ class Builder
 	 *
 	 * @param  string $key
 	 *
-	 * @return string|null
+	 * @return string
 	 */
-	public function render($key)
+	public function render($key, RendererInterface $renderer = null)
 	{
-		if ($menu = $this->getMenu($key)) return $menu->render();
+		if (!$this->hasMenu($key)) {
+			return '';
+		}
+
+		return $this->renderMenu($this->getMenu($key), $renderer);
+	}
+
+	public function renderMenu(Collection $menu, RendererInterface $renderer = null)
+	{
+		if ($renderer === null) {
+			$renderer = $this->getDefaultRenderer();
+		}
+
+		return $renderer->render($menu);
+	}
+
+	protected function getDefaultRenderer()
+	{
+		return new $this->defaultRenderer;
 	}
 
 	/**
@@ -190,14 +158,7 @@ class Builder
 	 */
 	protected function makeMenuCollection(array $attributes)
 	{
-		$options = [
-			'subMenuClass' => $this->subMenuClass,
-			'subMenuToggleClass' => $this->subMenuToggleClass,
-			'subMenuToggleAffix' => $this->subMenuToggleAffix,
-			'subMenuToggleAttrs' => $this->subMenuToggleAttrs,
-		];
-
-		return new Collection($attributes, $options);
+		return new Collection($this, $attributes);
 	}
 
 	public function addIconResolvers(array $resolvers)

@@ -9,6 +9,8 @@
 
 namespace anlutro\Menu;
 
+use Illuminate\Support\Str;
+
 /**
  * A menu submenu item.
  */

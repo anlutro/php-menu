@@ -20,6 +20,13 @@ class Collection
 	const DIVIDER = 'divider';
 
 	/**
+	 * The menu collection's attributes.
+	 *
+	 * @var array
+	 */
+	protected $attributes = [];
+
+	/**
 	 * The menu items, stored in a multidimensional array of location => items
 	 *
 	 * @var ItemInterface[][]
@@ -34,56 +41,13 @@ class Collection
 	protected $ids = [];
 
 	/**
-	 * The class to apply by default to sub-menus.
-	 *
-	 * @var string|null
+	 * @param Builder $builder
+	 * @param array   $attributes
 	 */
-	protected $subMenuClass;
-
-	/**
-	 * The class to apply by default to sub-menu toggle links.
-	 *
-	 * @var string
-	 */
-	protected $subMenuToggleClass;
-
-	/**
-	 * Text to affix to sub-menu toggles.
-	 * 
-	 * @var string
-	 */
-	protected $subMenuToggleAffix;
-
-	/**
-	 * Additional attributes to apply to sub-menu toggles.
-	 * 
-	 * @var array
-	 */
-	protected $subMenuToggleAttrs = [];
-
-	/**
-	 * @param array $attributes
-	 * @param array $options
-	 */
-	public function __construct(array $attributes = array(), array $options = array())
+	public function __construct(Builder $builder, array $attributes = array())
 	{
+		$this->builder = $builder;
 		$this->attributes = $this->parseAttributes($attributes);
-
-		if (isset($options['subMenuClass'])) {
-			$this->subMenuClass = $options['subMenuClass'];
-		}
-
-		if (isset($options['subMenuToggleClass'])) {
-			$this->subMenuToggleClass = $options['subMenuToggleClass'];
-		}
-
-		if (isset($options['subMenuToggleAffix'])) {
-			$this->subMenuToggleAffix = $options['subMenuToggleAffix'];
-		}
-
-		if (isset($options['subMenuToggleAttrs'])) {
-			$this->subMenuToggleAttrs = $options['subMenuToggleAttrs'];
-		}
 	}
 
 	/**
@@ -191,19 +155,7 @@ class Collection
 	 */
 	public function makeSubmenu($title, array $attributes = array())
 	{
-		$collection = new static(['class' => $this->subMenuClass]);
-
-		if (isset($attributes['class']) && strpos($attributes['class'], $this->subMenuToggleClass) === false) {
-			$attributes['class'] .= ' '.$this->subMenuToggleClass;
-		} else {
-			$attributes['class'] = $this->subMenuToggleClass;
-		}
-
-		$attributes = array_merge($this->subMenuToggleAttrs, $attributes);
-
-		if ($this->subMenuToggleAffix) {
-			$attributes['affix'] = $this->subMenuToggleAffix;
-		}
+		$collection = new static($this->builder, ['id' => Str::slug($title)]);
 
 		return new SubmenuItem($title, $collection, $attributes);
 	}
@@ -255,14 +207,6 @@ class Collection
 	 */
 	public function render()
 	{
-		$items = '';
-
-		/** @var ItemInterface $item */
-		foreach ($this->getSortedItems() as $item) {
-			if ($item === static::DIVIDER) $items .= '<li class="divider"></li>';
-			else $items .= '<li>'.$item->render().'</li>';
-		}
-
-		return '<ul '.$this->renderAttributes().'>'.$items.'</ul>';
+		return $this->builder->renderMenu($this);
 	}
 }
