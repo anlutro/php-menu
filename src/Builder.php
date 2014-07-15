@@ -32,10 +32,14 @@ class Builder
 	protected $defaultRenderer;
 
 	/**
-	 * @param array  $options
 	 * @param string $defaultRenderer
 	 */
-	public function __construct(array $options = array(), $defaultRenderer = null)
+	public function __construct($defaultRenderer = null)
+	{
+		$this->setDefaultRenderer($defaultRenderer);
+	}
+
+	public function setDefaultRenderer($defaultRenderer)
 	{
 		$this->defaultRenderer = $defaultRenderer ?: __NAMESPACE__.'\Renderers\BS3Renderer';
 	}
@@ -89,13 +93,13 @@ class Builder
 		if (!$data) return null;
 
 		foreach ($segments as $key) {
-			if ($data instanceof SubmenuItem) {
+			if ($data instanceof Nodes\SubmenuNode) {
 				$data = $data->getSubmenu();
 			}
 
 			if ($data instanceof Collection) {
 				$data = $data->getItem($key);
-			}  else {
+			} else {
 				return null;
 			}
 		}
@@ -163,6 +167,6 @@ class Builder
 
 	public function addIconResolvers(array $resolvers)
 	{
-		Item::addIconResolvers($resolvers);
+		Nodes\AbstractNode::addIconResolvers($resolvers);
 	}
 }

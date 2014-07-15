@@ -1,10 +1,9 @@
 <?php
 namespace anlutro\Menu\Tests;
 
+use PHPUnit_Framework_TestCase;
 use anlutro\Menu\Icons\FontAwesomeIcon as Icon;
 use anlutro\Menu\Icons\FontAwesomeStack as Stack;
-use PHPUnit_Framework_TestCase;
-use Mockery as m;
 
 class FontAwesomeIconTest extends PHPUnit_Framework_TestCase
 {

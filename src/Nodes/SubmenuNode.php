@@ -7,14 +7,15 @@
  * @package  php-menu
  */
 
-namespace anlutro\Menu;
+namespace anlutro\Menu\Nodes;
 
 use Illuminate\Support\Str;
+use anlutro\Menu\Collection;
 
 /**
  * A menu submenu item.
  */
-class SubmenuItem extends AbstractItem implements ItemInterface
+class SubmenuNode extends AbstractNode implements NodeInterface
 {
 	/**
 	 * The submenu items.
@@ -22,13 +23,6 @@ class SubmenuItem extends AbstractItem implements ItemInterface
 	 * @var \anlutro\Menu\Collection
 	 */
 	protected $submenu;
-
-	/**
-	 * The submenu's affix.
-	 *
-	 * @var string
-	 */
-	protected $affix;
 
 	/**
 	 * @param string $title
@@ -43,20 +37,6 @@ class SubmenuItem extends AbstractItem implements ItemInterface
 	}
 
 	/**
-	 * {@inheritdoc}
-	 */
-	protected function parseAttributes(array $in)
-	{
-		if (isset($in['affix'])) {
-			$this->affix = $in['affix'];
-		}
-
-		$out = parent::parseAttributes($in);
-
-		return $out;
-	}
-
-	/**
 	 * Get the item's submenu.
 	 *
 	 * @return \anlutro\Menu\Collection
@@ -66,29 +46,9 @@ class SubmenuItem extends AbstractItem implements ItemInterface
 		return $this->submenu;
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function renderUrl()
+	public function getUrl()
 	{
 		return '#';
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function renderTitle()
-	{
-		$affix = $this->affix ? ' '.$this->affix : '';
-		return parent::renderTitle() . $affix;
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function render()
-	{
-		return parent::render() . $this->submenu->render();
 	}
 
 	/**

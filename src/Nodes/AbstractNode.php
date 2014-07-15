@@ -7,14 +7,14 @@
  * @package  php-menu
  */
 
-namespace anlutro\Menu;
+namespace anlutro\Menu\Nodes;
 
 use Illuminate\Support\Str;
 
 /**
  * A menu item.
  */
-abstract class AbstractItem
+abstract class AbstractNode
 {
 	/**
 	 * The title of the item.
@@ -71,7 +71,7 @@ abstract class AbstractItem
 	}
 
 	/**
-	 * @param  array  $in
+	 * @param  array $in
 	 *
 	 * @return array
 	 */
@@ -92,6 +92,7 @@ abstract class AbstractItem
 		$out = array_except($in, static::$notHtmlAttributes);
 		$out['class'] = isset($in['class']) ? explode(' ', $in['class']) : [];
 		$out['id'] = isset($in['id']) ? $in['id'] : Str::slug($this->title);
+
 		return $out;
 	}
 
@@ -115,84 +116,8 @@ abstract class AbstractItem
 		return $this->attributes;
 	}
 
-	/**
-	 * Render the item as a link.
-	 *
-	 * @return string
-	 */
-	public function renderLink()
+	public function getIcon()
 	{
-		if ($icon = $this->renderIcon()) {
-			$icon .= ' ';
-		}
-
-		return '<a href="' . $this->renderUrl() . '" ' .$this->renderAttributes() .
-			'>' . $icon . $this->renderTitle() . '</a>';
-	}
-
-	/**
-	 * Render the item's URL.
-	 *
-	 * @return string
-	 */
-	abstract public function renderUrl();
-
-	/**
-	 * Render the item's attributes.
-	 *
-	 * @return string
-	 */
-	public function renderAttributes()
-	{
-		$attributes = $this->attributes;
-		if (isset($attributes['id']) && !Str::startsWith('menu-item--', $attributes['id'])) {
-			$attributes['id'] = 'menu-item--'.$attributes['id'];
-		}
-		$attributes['class'] = implode(' ', $this->attributes['class']);
-		$strings = [];
-		foreach ($attributes as $key => $value) {
-			if (!empty($value)) $strings[] = "$key=\"$value\"";
-		}
-		return implode(' ', $strings);
-	}
-
-	/**
-	 * Render the item's icon.
-	 *
-	 * @return string
-	 */
-	public function renderIcon()
-	{
-		return $this->icon ? $this->icon->render() : '';
-	}
-
-	/**
-	 * Render the item's title.
-	 *
-	 * @return string
-	 */
-	public function renderTitle()
-	{
-		return e($this->title);
-	}
-
-	/**
-	 * Render the item.
-	 *
-	 * @return string
-	 */
-	public function render()
-	{
-		return $this->renderLink();
-	}
-
-	/**
-	 * Cast the item to a string.
-	 *
-	 * @return string
-	 */
-	public function __toString()
-	{
-		return $this->render();
+		return $this->icon;
 	}
 }

@@ -1,22 +1,26 @@
 <?php
+/**
+ * PHP Menu Builder
+ * 
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  php-menu
+ */
+
 namespace anlutro\Menu\Renderers;
 
 use anlutro\Menu\Collection;
-use anlutro\Menu\SubmenuItem;
+use anlutro\Menu\Nodes\SubmenuNode;
+use anlutro\Menu\Nodes\NodeInterface;
 
-class ListRenderer
+class ListRenderer implements RendererInterface
 {
-	public function render($menu)
+	public function render(Collection $menu)
 	{
 		return $this->renderUnorderedList($this->renderItems($menu->getSortedItems()), $this->getMenuAttributes($menu));
 	}
 
-	public function renderSubmenu($menu)
-	{
-		return $this->renderUnorderedList($this->renderItems($menu->getSortedItems()), $this->getSubmenuAttributes($menu));
-	}
-
-	public function renderItems(array $items)
+	protected function renderItems(array $items)
 	{
 		$str = '';
 
@@ -27,13 +31,13 @@ class ListRenderer
 		return $str;
 	}
 
-	public function renderItem($item)
+	protected function renderItem(NodeInterface $item)
 	{
 		if ($item == Collection::DIVIDER) {
 			return $this->renderListItem('', $this->getDividerAttributes());
 		}
 
-		if ($item instanceof SubmenuItem) {
+		if ($item instanceof SubmenuNode) {
 			$submenuLink = $this->renderAnchor($this->getSubmenuTitle($item), '#', $this->getSubmenuAnchorAttributes($item));
 			return $this->renderListItem($submenuLink.$this->renderSubmenu($item->getSubmenu()), $this->getSubmenuItemAttributes($item));
 		}
@@ -41,32 +45,42 @@ class ListRenderer
 		return $this->renderListItem($this->renderAnchor($this->getMenuTitle($item), $item->getUrl(), $this->getItemAnchorAttributes($item)));
 	}
 
-	public function renderUnorderedList($items, array $attributes = array())
+	protected function renderSubmenu(Collection $menu)
+	{
+		return $this->renderUnorderedList($this->renderItems($menu->getSortedItems()), $this->getSubmenuAttributes($menu));
+	}
+
+	protected function renderUnorderedList($items, array $attributes = array())
 	{
 		return '<ul'.$this->attributes($attributes).'>'.$items.'</ul>';
 	}
 
-	public function renderListItem($title, array $attributes = array())
+	protected function renderListItem($title, array $attributes = array())
 	{
 		return '<li'.$this->attributes($attributes).'>'.$title.'</li>';
 	}
 
-	public function renderAnchor($title, $href, array $attributes)
+	protected function renderAnchor($title, $href, array $attributes)
 	{
 		return '<a'.$this->attributes(['href' => $href] + $attributes).'>'.$title.'</a>';
 	}
 
-	public function getMenuTitle($item)
+	protected function getMenuTitle(NodeInterface $item)
 	{
-		return $item->renderIcon().e($item->getTitle());
+		return $this->renderItemIcon($item).e($item->getTitle());
 	}
 
-	public function getSubmenuTitle($item)
+	protected function renderItemIcon(NodeInterface $item)
+	{
+		return ($icon = $item->getIcon()) ? $icon->render() : '';
+	}
+
+	protected function getSubmenuTitle($item)
 	{
 		return $this->getMenuTitle($item).$this->getSubmenuAffix();
 	}
 
-	public function getMenuAttributes($menu)
+	protected function getMenuAttributes($menu)
 	{
 		$attributes = $menu->getAttributes();
 		if (isset($attributes['id'])) {
@@ -75,7 +89,7 @@ class ListRenderer
 		return $attributes;
 	}
 
-	public function getSubmenuAttributes($menu)
+	protected function getSubmenuAttributes($menu)
 	{
 		$attributes = $menu->getAttributes();
 		if (isset($attributes['id'])) {
@@ -84,12 +98,12 @@ class ListRenderer
 		return $attributes;
 	}
 
-	public function getDividerAttributes()
+	protected function getDividerAttributes()
 	{
 		return [];
 	}
 
-	public function getItemAnchorAttributes($item)
+	protected function getItemAnchorAttributes(NodeInterface $item)
 	{
 		$attributes = $item->getAttributes();
 		if (isset($attributes['id'])) {
@@ -98,12 +112,12 @@ class ListRenderer
 		return $attributes;
 	}
 
-	public function getSubmenuAffix()
+	protected function getSubmenuAffix()
 	{
 		return '';
 	}
 
-	public function getSubmenuAnchorAttributes($item)
+	protected function getSubmenuAnchorAttributes(NodeInterface $item)
 	{
 		$attributes = $item->getAttributes();
 		if (isset($attributes['id'])) {
@@ -112,12 +126,12 @@ class ListRenderer
 		return $attributes;
 	}
 
-	public function getSubmenuItemAttributes($item)
+	protected function getSubmenuItemAttributes(NodeInterface $item)
 	{
 		return [];
 	}
 
-	public function mergeAttributes(array $attributes, array $defaults)
+	protected function mergeAttributes(array $attributes, array $defaults)
 	{
 		if (isset($attributes['class']) && isset($defaults['class'])) {
 			if (is_string($attributes['class'])) {
@@ -137,7 +151,7 @@ class ListRenderer
 		return $attributes + $defaults;
 	}
 
-	public function attributes(array $attributes)
+	protected function attributes(array $attributes)
 	{
 		$str = '';
 

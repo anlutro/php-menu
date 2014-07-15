@@ -29,7 +29,7 @@ class Collection
 	/**
 	 * The menu items, stored in a multidimensional array of location => items
 	 *
-	 * @var ItemInterface[][]
+	 * @var Nodes\NodeInterface[][]
 	 */
 	protected $items = [];
 
@@ -62,39 +62,23 @@ class Collection
 		return $out;
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getAttributes()
 	{
 		return $this->attributes;
 	}
 
 	/**
-	 * Render the menu's attributes.
+	 * Add a new node instance to the collection.
 	 *
-	 * @return string
-	 */
-	public function renderAttributes()
-	{
-		$attributes = $this->attributes;
-		if (isset($attributes['id']) && !Str::startsWith('menu--', $attributes['id'])) {
-			$attributes['id'] = 'menu--'.$attributes['id'];
-		}
-		$attributes['class'] = implode(' ', $this->attributes['class']);
-		$strings = [];
-		foreach ($attributes as $key => $value) {
-			if (!empty($value)) $strings[] = "$key=\"$value\"";
-		}
-		return implode(' ', $strings);
-	}
-
-	/**
-	 * Add a new ItemInterface instance to the collection.
-	 *
-	 * @param  ItemInterface $item
+	 * @param  Nodes\NodeInterface $item
 	 * @param  int           $location
 	 *
-	 * @return \anlutro\Menu\ItemInterface $item
+	 * @return Nodes\NodeInterface $item
 	 */
-	public function addItemInstance(ItemInterface $item, $location = null)
+	public function addItemInstance(Nodes\NodeInterface $item, $location = null)
 	{
 		$location = (int) $location;
 		$this->items[$location][] = $item;
@@ -110,7 +94,7 @@ class Collection
 	 * @param  array  $attributes
 	 * @param  int    $location
 	 *
-	 * @return \anlutro\Menu\Item
+	 * @return \anlutro\Menu\Nodes\AnchorNode
 	 */
 	public function addItem($title, $url, array $attributes = array(), $location = null)
 	{
@@ -124,11 +108,11 @@ class Collection
 	 * @param  string $url
 	 * @param  array  $attributes
 	 *
-	 * @return \anlutro\Menu\Item
+	 * @return \anlutro\Menu\Nodes\AnchorNode
 	 */
 	public function makeItem($title, $url, array $attributes = array())
 	{
-		return new Item($title, $url, $attributes);
+		return new Nodes\AnchorNode($title, $url, $attributes);
 	}
 
 	/**
@@ -138,7 +122,7 @@ class Collection
 	 * @param  array  $attributes
 	 * @param  int    $location
 	 *
-	 * @return \anlutro\Menu\SubmenuItem
+	 * @return \anlutro\Menu\Nodes\SubmenuNode
 	 */
 	public function addSubmenu($title, array $attributes = array(), $location = null)
 	{
@@ -151,13 +135,13 @@ class Collection
 	 * @param  string $title
 	 * @param  array  $attributes
 	 *
-	 * @return \anlutro\Menu\Item
+	 * @return \anlutro\Menu\Nodes\SubmenuNode
 	 */
 	public function makeSubmenu($title, array $attributes = array())
 	{
 		$collection = new static($this->builder, ['id' => Str::slug($title)]);
 
-		return new SubmenuItem($title, $collection, $attributes);
+		return new Nodes\SubmenuNode($title, $collection, $attributes);
 	}
 
 	/**
@@ -176,7 +160,7 @@ class Collection
 	 *
 	 * @param  string $id
 	 *
-	 * @return \anlutro\Menu\ItemInterface|null
+	 * @return \anlutro\Menu\Nodes\NodeInterface|null
 	 */
 	public function getItem($id)
 	{
