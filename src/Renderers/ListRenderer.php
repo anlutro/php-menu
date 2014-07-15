@@ -75,12 +75,12 @@ class ListRenderer implements RendererInterface
 		return ($icon = $item->getIcon()) ? $icon->render() : '';
 	}
 
-	protected function getSubmenuTitle($item)
+	protected function getSubmenuTitle(SubmenuNode $item)
 	{
 		return $this->getMenuTitle($item).$this->getSubmenuAffix();
 	}
 
-	protected function getMenuAttributes($menu)
+	protected function getMenuAttributes(Collection $menu)
 	{
 		$attributes = $menu->getAttributes();
 		if (isset($attributes['id'])) {
@@ -89,7 +89,7 @@ class ListRenderer implements RendererInterface
 		return $attributes;
 	}
 
-	protected function getSubmenuAttributes($menu)
+	protected function getSubmenuAttributes(Collection $menu)
 	{
 		$attributes = $menu->getAttributes();
 		if (isset($attributes['id'])) {
@@ -117,7 +117,7 @@ class ListRenderer implements RendererInterface
 		return '';
 	}
 
-	protected function getSubmenuAnchorAttributes(NodeInterface $item)
+	protected function getSubmenuAnchorAttributes(SubmenuNode $item)
 	{
 		$attributes = $item->getAttributes();
 		if (isset($attributes['id'])) {
@@ -126,7 +126,7 @@ class ListRenderer implements RendererInterface
 		return $attributes;
 	}
 
-	protected function getSubmenuItemAttributes(NodeInterface $item)
+	protected function getSubmenuItemAttributes(SubmenuNode $item)
 	{
 		return [];
 	}
