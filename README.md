@@ -23,8 +23,6 @@ $builder = new anlutro\Menu\Builder;
 $menu = $builder->createMenu('left');
 ```
 
-By default, Bootstrap 3-specific classes are used. If you want to use something else, pass an array of custom data into the Builder's constructor. You can see what the default settings look like [here](https://github.com/anlutro/php-menu/blob/master/src/config/config.php).
-
 If you're using Laravel 4, you can use `Menu::` instead of `$builder->` provided you set up an alias as shown in the installation instructions above.
 
 From here, you can add items to your menus from anywhere.
@@ -53,6 +51,8 @@ When you want to render a menu, call render($menu) and echo it.
 ```php
 echo $builder->render('left');
 ```
+
+By default, Bootstrap 3-specific classes are used. If you want to use something else, you need to create your own class implementation of `anlutro\Menu\Renderers\RendererInterface` and either do `$builder->setDefaultRenderer('MyRenderer')` or `$builder->render('name_of_menu', $myRenderer)`.
 
 ## Contact
 
