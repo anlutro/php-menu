@@ -1,12 +1,13 @@
 <?php
+namespace anlutro\Menu\Tests;
 
-use Mockery as m;
+use PHPUnit_Framework_TestCase;
 
 class MenuCollectionTest extends PHPUnit_Framework_TestCase
 {
 	public function makeCollection()
 	{
-		return new anlutro\Menu\Collection;
+		return new \anlutro\Menu\Collection(new \anlutro\Menu\Builder());
 	}
 
 	public function testAddedItemsAreStored()
@@ -18,8 +19,8 @@ class MenuCollectionTest extends PHPUnit_Framework_TestCase
 
 		$items = $coll->getItems();
 		$this->assertEquals(2, count($items));
-		$this->assertEquals('Item 1 Title', $items[0]->renderTitle());
-		$this->assertEquals('Item 1 Title', $items[1]->renderUrl());
+		$this->assertEquals('Item 1 Title', $items[0]->getTitle());
+		$this->assertEquals('Item 1 Title', $items[1]->getUrl());
 	}
 
 	public function testGetMenuItemById()
@@ -29,29 +30,14 @@ class MenuCollectionTest extends PHPUnit_Framework_TestCase
 		$coll->addItem('Second Item', '/bar-baz');
 
 		$item = $coll->getItem('test-item');
-		$this->assertInstanceOf('anlutro\Menu\Item', $item);
-		$this->assertEquals('/foo-bar', $item->renderUrl());
+		$this->assertInstanceOf('anlutro\Menu\Nodes\AnchorNode', $item);
+		$this->assertEquals('/foo-bar', $item->getUrl());
 
 		$item = $coll->getItem('second-item');
-		$this->assertInstanceOf('anlutro\Menu\Item', $item);
-		$this->assertEquals('/bar-baz', $item->renderUrl());
+		$this->assertInstanceOf('anlutro\Menu\Nodes\AnchorNode', $item);
+		$this->assertEquals('/bar-baz', $item->getUrl());
 
 		$this->assertEquals(null, $coll->getItem('nonexistant'));
-	}
-
-	public function testSimpleRender()
-	{
-		$coll = $this->makeCollection();
-		$coll->addItem('Test Item', '/foo-bar');
-		$coll->addItem('Second Item', '/bar-baz');
-
-		$str = $coll->render();
-		$this->assertContains('Test Item', $str);
-		$this->assertContains('Second Item', $str);
-		$this->assertContains('<a href="/foo-bar', $str);
-		$this->assertContains('<a href="/bar-baz', $str);
-		$this->assertContains('id="menu-item--test-item"', $str);
-		$this->assertContains('id="menu-item--second-item"', $str);
 	}
 
 	public function testAddWithPriorities()

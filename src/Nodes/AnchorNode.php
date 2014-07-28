@@ -7,14 +7,14 @@
  * @package  php-menu
  */
 
-namespace anlutro\Menu;
+namespace anlutro\Menu\Nodes;
 
 use Illuminate\Support\Str;
 
 /**
  * A menu item.
  */
-class Item extends AbstractItem implements ItemInterface
+class AnchorNode extends AbstractNode implements NodeInterface
 {
 	/**
 	 * The URL the item links to.
@@ -35,12 +35,7 @@ class Item extends AbstractItem implements ItemInterface
 		$this->attributes = $this->parseAttributes($attributes);
 	}
 
-	/**
-	 * Render the item's URL.
-	 *
-	 * @return string
-	 */
-	public function renderUrl()
+	public function getUrl()
 	{
 		return $this->url;
 	}

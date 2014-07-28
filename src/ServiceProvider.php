@@ -16,13 +16,13 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 	public function register()
 	{
 		$this->app->bindShared('anlutro\Menu\Builder', function($app) {
-			return new Builder($app['config']['anlutro/menu::config']);
+			return new Builder();
 		});
 	}
 
 	public function boot()
 	{
-		$this->app['config']->package('anlutro/menu', __DIR__.'/config', 'anlutro/menu');
+		// $this->app['config']->package('anlutro/menu', __DIR__.'/config', 'anlutro/menu');
 	}
 
 	public function provides()

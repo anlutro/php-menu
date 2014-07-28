@@ -17,12 +17,17 @@ use Illuminate\Support\Collection as BaseCollection;
  */
 class Collection
 {
-	const DIVIDER = 'divider';
+	/**
+	 * The menu collection's attributes.
+	 *
+	 * @var array
+	 */
+	protected $attributes = [];
 
 	/**
 	 * The menu items, stored in a multidimensional array of location => items
 	 *
-	 * @var ItemInterface[][]
+	 * @var Nodes\NodeInterface[][]
 	 */
 	protected $items = [];
 
@@ -34,56 +39,20 @@ class Collection
 	protected $ids = [];
 
 	/**
-	 * The class to apply by default to sub-menus.
+	 * The current number of dividers. Used to generate divider node IDs.
 	 *
-	 * @var string|null
+	 * @var integer
 	 */
-	protected $subMenuClass;
+	protected $dividerCount = 0;
 
 	/**
-	 * The class to apply by default to sub-menu toggle links.
-	 *
-	 * @var string
+	 * @param Builder $builder
+	 * @param array   $attributes
 	 */
-	protected $subMenuToggleClass;
-
-	/**
-	 * Text to affix to sub-menu toggles.
-	 * 
-	 * @var string
-	 */
-	protected $subMenuToggleAffix;
-
-	/**
-	 * Additional attributes to apply to sub-menu toggles.
-	 * 
-	 * @var array
-	 */
-	protected $subMenuToggleAttrs = [];
-
-	/**
-	 * @param array $attributes
-	 * @param array $options
-	 */
-	public function __construct(array $attributes = array(), array $options = array())
+	public function __construct(Builder $builder, array $attributes = array())
 	{
+		$this->builder = $builder;
 		$this->attributes = $this->parseAttributes($attributes);
-
-		if (isset($options['subMenuClass'])) {
-			$this->subMenuClass = $options['subMenuClass'];
-		}
-
-		if (isset($options['subMenuToggleClass'])) {
-			$this->subMenuToggleClass = $options['subMenuToggleClass'];
-		}
-
-		if (isset($options['subMenuToggleAffix'])) {
-			$this->subMenuToggleAffix = $options['subMenuToggleAffix'];
-		}
-
-		if (isset($options['subMenuToggleAttrs'])) {
-			$this->subMenuToggleAttrs = $options['subMenuToggleAttrs'];
-		}
 	}
 
 	/**
@@ -99,37 +68,31 @@ class Collection
 	}
 
 	/**
-	 * Render the menu's attributes.
-	 *
-	 * @return string
+	 * {@inheritdoc}
 	 */
-	public function renderAttributes()
+	public function getAttributes()
 	{
-		$attributes = $this->attributes;
-		if (isset($attributes['id']) && !Str::startsWith('menu--', $attributes['id'])) {
-			$attributes['id'] = 'menu--'.$attributes['id'];
-		}
-		$attributes['class'] = implode(' ', $this->attributes['class']);
-		$strings = [];
-		foreach ($attributes as $key => $value) {
-			if (!empty($value)) $strings[] = "$key=\"$value\"";
-		}
-		return implode(' ', $strings);
+		return $this->attributes;
 	}
 
 	/**
-	 * Add a new ItemInterface instance to the collection.
+	 * Add a new node instance to the collection.
 	 *
-	 * @param  ItemInterface $item
+	 * @param  Nodes\NodeInterface $item
 	 * @param  int           $location
 	 *
-	 * @return \anlutro\Menu\ItemInterface $item
+	 * @return Nodes\NodeInterface $item
 	 */
-	public function addItemInstance(ItemInterface $item, $location = null)
+	public function addItemInstance(Nodes\NodeInterface $item, $location = null)
 	{
 		$location = (int) $location;
+
 		$this->items[$location][] = $item;
-		$this->ids[$item->getId()] = $item;
+
+		if ($id = $item->getId()) {
+			$this->ids[$id] = $item;
+		}
+
 		return $item;
 	}
 
@@ -141,7 +104,7 @@ class Collection
 	 * @param  array  $attributes
 	 * @param  int    $location
 	 *
-	 * @return \anlutro\Menu\Item
+	 * @return \anlutro\Menu\Nodes\AnchorNode
 	 */
 	public function addItem($title, $url, array $attributes = array(), $location = null)
 	{
@@ -155,11 +118,11 @@ class Collection
 	 * @param  string $url
 	 * @param  array  $attributes
 	 *
-	 * @return \anlutro\Menu\Item
+	 * @return \anlutro\Menu\Nodes\AnchorNode
 	 */
 	public function makeItem($title, $url, array $attributes = array())
 	{
-		return new Item($title, $url, $attributes);
+		return new Nodes\AnchorNode($title, $url, $attributes);
 	}
 
 	/**
@@ -169,7 +132,7 @@ class Collection
 	 * @param  array  $attributes
 	 * @param  int    $location
 	 *
-	 * @return \anlutro\Menu\SubmenuItem
+	 * @return \anlutro\Menu\Nodes\SubmenuNode
 	 */
 	public function addSubmenu($title, array $attributes = array(), $location = null)
 	{
@@ -182,25 +145,13 @@ class Collection
 	 * @param  string $title
 	 * @param  array  $attributes
 	 *
-	 * @return \anlutro\Menu\Item
+	 * @return \anlutro\Menu\Nodes\SubmenuNode
 	 */
 	public function makeSubmenu($title, array $attributes = array())
 	{
-		$collection = new static(['class' => $this->subMenuClass]);
+		$collection = new static($this->builder, ['id' => Str::slug($title)]);
 
-		if (isset($attributes['class']) && strpos($attributes['class'], $this->subMenuToggleClass) === false) {
-			$attributes['class'] .= ' '.$this->subMenuToggleClass;
-		} else {
-			$attributes['class'] = $this->subMenuToggleClass;
-		}
-
-		$attributes = array_merge($this->subMenuToggleAttrs, $attributes);
-
-		if ($this->subMenuToggleAffix) {
-			$attributes['affix'] = $this->subMenuToggleAffix;
-		}
-
-		return new SubmenuItem($title, $collection, $attributes);
+		return new Nodes\SubmenuNode($title, $collection, $attributes);
 	}
 
 	/**
@@ -210,8 +161,9 @@ class Collection
 	 */
 	public function addDivider($location = null)
 	{
-		$location = (int) $location;
-		$this->items[$location][] = static::DIVIDER;
+		$node = new Nodes\DividerNode('divider-'.(++$this->dividerCount));
+
+		$this->addItemInstance($node, $location);
 	}
 
 	/**
@@ -219,7 +171,7 @@ class Collection
 	 *
 	 * @param  string $id
 	 *
-	 * @return \anlutro\Menu\ItemInterface|null
+	 * @return \anlutro\Menu\Nodes\NodeInterface|null
 	 */
 	public function getItem($id)
 	{
@@ -237,22 +189,25 @@ class Collection
 	}
 
 	/**
+	 * Get a sorted array of the menu's items.
+	 *
+	 * @return array
+	 */
+	public function getSortedItems()
+	{
+		$sorted = $this->items;
+		ksort($sorted);
+
+		return array_flatten($sorted);
+	}
+
+	/**
 	 * Render the menu as an unordered list.
 	 *
 	 * @return string
 	 */
 	public function render()
 	{
-		$items = '';
-		$sorted = $this->items;
-		ksort($sorted);
-
-		/** @var ItemInterface $item */
-		foreach (array_flatten($sorted) as $item) {
-			if ($item === static::DIVIDER) $items .= '<li class="divider"></li>';
-			else $items .= '<li>'.$item->render().'</li>';
-		}
-
-		return '<ul '.$this->renderAttributes().'>'.$items.'</ul>';
+		return $this->builder->renderMenu($this);
 	}
 }
