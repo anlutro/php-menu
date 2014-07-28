@@ -17,8 +17,6 @@ use Illuminate\Support\Collection as BaseCollection;
  */
 class Collection
 {
-	const DIVIDER = 'divider';
-
 	/**
 	 * The menu collection's attributes.
 	 *
@@ -39,6 +37,13 @@ class Collection
 	 * @var array
 	 */
 	protected $ids = [];
+
+	/**
+	 * The current number of dividers. Used to generate divider node IDs.
+	 *
+	 * @var integer
+	 */
+	protected $dividerCount = 0;
 
 	/**
 	 * @param Builder $builder
@@ -81,8 +86,13 @@ class Collection
 	public function addItemInstance(Nodes\NodeInterface $item, $location = null)
 	{
 		$location = (int) $location;
+
 		$this->items[$location][] = $item;
-		$this->ids[$item->getId()] = $item;
+
+		if ($id = $item->getId()) {
+			$this->ids[$id] = $item;
+		}
+
 		return $item;
 	}
 
@@ -151,8 +161,9 @@ class Collection
 	 */
 	public function addDivider($location = null)
 	{
-		$location = (int) $location;
-		$this->items[$location][] = static::DIVIDER;
+		$node = new Nodes\DividerNode('divider-'.(++$this->dividerCount));
+
+		$this->addItemInstance($node, $location);
 	}
 
 	/**
@@ -177,10 +188,16 @@ class Collection
 		return empty($this->items);
 	}
 
+	/**
+	 * Get a sorted array of the menu's items.
+	 *
+	 * @return array
+	 */
 	public function getSortedItems()
 	{
 		$sorted = $this->items;
 		ksort($sorted);
+
 		return array_flatten($sorted);
 	}
 

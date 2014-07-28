@@ -10,6 +10,7 @@
 namespace anlutro\Menu\Renderers;
 
 use anlutro\Menu\Collection;
+use anlutro\Menu\Nodes\DividerNode;
 use anlutro\Menu\Nodes\SubmenuNode;
 use anlutro\Menu\Nodes\NodeInterface;
 
@@ -33,13 +34,11 @@ class ListRenderer implements RendererInterface
 
 	protected function renderItem(NodeInterface $item)
 	{
-		if ($item == Collection::DIVIDER) {
-			return $this->renderListItem('', $this->getDividerAttributes());
-		}
-
 		if ($item instanceof SubmenuNode) {
 			$submenuLink = $this->renderAnchor($this->getSubmenuTitle($item), '#', $this->getSubmenuAnchorAttributes($item));
 			return $this->renderListItem($submenuLink.$this->renderSubmenu($item->getSubmenu()), $this->getSubmenuItemAttributes($item));
+		} else if ($item instanceof DividerNode) {
+			return $this->renderListItem('', $this->getDividerAttributes());
 		}
 
 		return $this->renderListItem($this->renderAnchor($this->getMenuTitle($item), $item->getUrl(), $this->getItemAnchorAttributes($item)));
