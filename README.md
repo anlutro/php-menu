@@ -2,7 +2,7 @@
 
 Simple dynamic menu building system.
 
-PHP framework agnostic. Uses Twitter Bootstrap 3 class names and is not very configurable in that regard (yet?).
+PHP framework agnostic. The default renderer uses Bootstrap 3 class names and markup.
 
 ## Installation
 

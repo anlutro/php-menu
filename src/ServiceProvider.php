@@ -20,11 +20,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 		});
 	}
 
-	public function boot()
-	{
-		// $this->app['config']->package('anlutro/menu', __DIR__.'/config', 'anlutro/menu');
-	}
-
 	public function provides()
 	{
 		return array('anlutro\Menu\Builder');
