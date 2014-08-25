@@ -16,6 +16,9 @@ use anlutro\Menu\Nodes\NodeInterface;
 
 class ListRenderer implements RendererInterface
 {
+	protected $previous;
+	protected $pendingDivider;
+
 	public function render(Collection $menu)
 	{
 		return $this->renderUnorderedList($this->renderItems($menu->getSortedItems()), $this->getMenuAttributes($menu));
@@ -27,6 +30,7 @@ class ListRenderer implements RendererInterface
 
 		foreach ($items as $item) {
 			$str .= $this->renderItem($item);
+			$this->previous = $item;
 		}
 
 		return $str;
@@ -34,14 +38,28 @@ class ListRenderer implements RendererInterface
 
 	protected function renderItem(NodeInterface $item)
 	{
-		if ($item instanceof SubmenuNode) {
-			$submenuLink = $this->renderAnchor($this->getSubmenuTitle($item), '#', $this->getSubmenuAnchorAttributes($item));
-			return $this->renderListItem($submenuLink.$this->renderSubmenu($item->getSubmenu()), $this->getSubmenuItemAttributes($item));
-		} else if ($item instanceof DividerNode) {
-			return $this->renderListItem('', $this->getDividerAttributes());
+		if ($item instanceof DividerNode) {
+			if ($this->previous !== null
+				&& !$this->previous instanceof DividerNode
+			) {
+				$this->pendingDivider = $this->renderListItem('', $this->getDividerAttributes());
+			}
+			return '';
 		}
 
-		return $this->renderListItem($this->renderAnchor($this->getMenuTitle($item), $item->getUrl(), $this->getItemAnchorAttributes($item)));
+		$str = '';
+
+		if ($this->pendingDivider !== null) {
+			$str = $this->pendingDivider;
+			$this->pendingDivider = null;
+		}
+
+		if ($item instanceof SubmenuNode) {
+			$submenuLink = $this->renderAnchor($this->getSubmenuTitle($item), '#', $this->getSubmenuAnchorAttributes($item));
+			return $str . $this->renderListItem($submenuLink . $this->renderSubmenu($item->getSubmenu()), $this->getSubmenuItemAttributes($item));
+		}
+
+		return $str . $this->renderListItem($this->renderAnchor($this->getMenuTitle($item), $item->getUrl(), $this->getItemAnchorAttributes($item)));
 	}
 
 	protected function renderSubmenu(Collection $menu)
