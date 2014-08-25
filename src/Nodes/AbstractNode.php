@@ -67,33 +67,40 @@ abstract class AbstractNode
 	public static function addIconResolvers(array $resolvers)
 	{
 		static::$iconResolvers = $resolvers + static::$iconResolvers;
-		static::$notHtmlAttributes = array_merge(['icon', 'href', 'affix', 'prefix'], array_keys(static::$iconResolvers));
+		static::$notHtmlAttributes = array_merge(['icon', 'href', 'affix', 'prefix'],
+			array_keys(static::$iconResolvers));
 	}
 
 	/**
-	 * @param  array $in
+	 * @param  array $attributes
 	 *
 	 * @return array
 	 */
-	protected function parseAttributes(array $in)
+	protected function parseAttributes(array $attributes)
 	{
-		if (isset($in['icon']) && $in['icon'] instanceof Icons\IconInterface) {
-			$this->icon = $in['icon'];
+		if (isset($attributes['icon']) && $attributes['icon'] instanceof Icons\IconInterface) {
+			$this->icon = $attributes['icon'];
 		} else {
 			/** @var Icons\IconInterface $resolver */
 			foreach (static::$iconResolvers as $key => $resolver) {
-				if (array_key_exists($key, $in)) {
-					$this->icon = $resolver::createFromAttribute($in[$key]);
+				if (array_key_exists($key, $attributes)) {
+					$this->icon = $resolver::createFromAttribute($attributes[$key]);
 					break;
 				}
 			}
 		}
 
-		$out = array_except($in, static::$notHtmlAttributes);
-		$out['class'] = isset($in['class']) ? explode(' ', $in['class']) : [];
-		$out['id'] = isset($in['id']) ? $in['id'] : Str::slug($this->title);
+		if (isset($attributes['class'])) {
+			if (is_string($attributes['class'])) {
+				$attributes['class'] = explode(' ', $attributes['class']);
+			}
+		} else {
+			$attributes['class'] = [];
+		}
 
-		return $out;
+		$attributes['id'] = isset($attributes['id']) ? $attributes['id'] : Str::slug($this->title);
+
+		return array_except($attributes, static::$notHtmlAttributes);
 	}
 
 	/**

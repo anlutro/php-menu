@@ -139,6 +139,14 @@ class Builder
 		return $this->renderMenu($this->getMenu($key), $renderer);
 	}
 
+	/**
+	 * Render a menu collection instance.
+	 *
+	 * @param  Collection $menu
+	 * @param  RendererInterface $renderer Optional
+	 *
+	 * @return string
+	 */
 	public function renderMenu(Collection $menu, RendererInterface $renderer = null)
 	{
 		if ($renderer === null) {
@@ -148,6 +156,11 @@ class Builder
 		return $renderer->render($menu);
 	}
 
+	/**
+	 * Get an instance of the default renderer interface.
+	 *
+	 * @return RendererInterface
+	 */
 	protected function getDefaultRenderer()
 	{
 		return new $this->defaultRenderer;
@@ -165,6 +178,11 @@ class Builder
 		return new Collection($this, $attributes);
 	}
 
+	/**
+	 * Add icon resolvers.
+	 *
+	 * @param array $resolvers
+	 */
 	public function addIconResolvers(array $resolvers)
 	{
 		Nodes\AbstractNode::addIconResolvers($resolvers);

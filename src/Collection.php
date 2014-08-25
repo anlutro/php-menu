@@ -56,15 +56,21 @@ class Collection
 	}
 
 	/**
-	 * @param  array  $in
+	 * @param  array  $attributes
 	 *
 	 * @return array
 	 */
-	protected function parseAttributes(array $in)
+	protected function parseAttributes(array $attributes)
 	{
-		$out = $in;
-		$out['class'] = isset($in['class']) ? explode(' ', $in['class']) : [];
-		return $out;
+		if (isset($attributes['class'])) {
+			if (is_string($attributes['class'])) {
+				$attributes['class'] = explode(' ', $attributes['class']);
+			}
+		} else {
+			$attributes['class'] = [];
+		}
+
+		return $attributes;
 	}
 
 	/**
@@ -198,7 +204,7 @@ class Collection
 		$sorted = $this->items;
 		ksort($sorted);
 
-		return array_flatten($sorted);
+		return $sorted ? call_user_func_array('array_merge', $sorted) : [];
 	}
 
 	/**
