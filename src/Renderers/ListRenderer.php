@@ -39,9 +39,7 @@ class ListRenderer implements RendererInterface
 	protected function renderItem(NodeInterface $item)
 	{
 		if ($item instanceof DividerNode) {
-			if ($this->previous !== null
-				&& !$this->previous instanceof DividerNode
-			) {
+			if ($this->previous !== null && !$this->previous instanceof DividerNode) {
 				$this->pendingDivider = $this->renderListItem('', $this->getDividerAttributes());
 			}
 			return '';
