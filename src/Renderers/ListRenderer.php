@@ -82,7 +82,7 @@ class ListRenderer implements RendererInterface
 
 	protected function getMenuTitle(NodeInterface $item)
 	{
-		return $this->renderItemIcon($item).e($item->getTitle());
+		return $this->renderItemIcon($item).$item->getTitle();
 	}
 
 	protected function renderItemIcon(NodeInterface $item)

@@ -38,6 +38,20 @@ abstract class AbstractNode
 	protected $icon;
 
 	/**
+	 * Optional HTML prefix for the node.
+	 *
+	 * @var string
+	 */
+	protected $prefix = '';
+
+	/**
+	 * Optional HTML suffix for the node.
+	 *
+	 * @var string
+	 */
+	protected $suffix = '';
+
+	/**
 	 * Array of icon resolvers.
 	 *
 	 * @var array
@@ -55,7 +69,7 @@ abstract class AbstractNode
 	 * @var array
 	 */
 	protected static $notHtmlAttributes = [
-		'icon', 'href', 'affix', 'prefix', 'glyph',
+		'icon', 'href', 'suffix', 'prefix', 'glyph',
 		'glyphicon', 'fa-icon', 'fa-stack'
 	];
 
@@ -67,7 +81,7 @@ abstract class AbstractNode
 	public static function addIconResolvers(array $resolvers)
 	{
 		static::$iconResolvers = $resolvers + static::$iconResolvers;
-		static::$notHtmlAttributes = array_merge(['icon', 'href', 'affix', 'prefix'],
+		static::$notHtmlAttributes = array_merge(['icon', 'href', 'suffix', 'prefix'],
 			array_keys(static::$iconResolvers));
 	}
 
@@ -98,6 +112,13 @@ abstract class AbstractNode
 			$attributes['class'] = [];
 		}
 
+		if (isset($attributes['suffix'])) {
+			$this->suffix = $attributes['suffix'];
+		}
+		if (isset($attributes['prefix'])) {
+			$this->prefix = $attributes['prefix'];
+		}
+
 		$attributes['id'] = isset($attributes['id']) ? $attributes['id'] : Str::slug($this->title);
 
 		return array_except($attributes, static::$notHtmlAttributes);
@@ -115,7 +136,7 @@ abstract class AbstractNode
 
 	public function getTitle()
 	{
-		return $this->title;
+		return $this->prefix.e($this->title).$this->suffix;
 	}
 
 	public function getAttributes()
