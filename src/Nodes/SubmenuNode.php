@@ -9,7 +9,6 @@
 
 namespace anlutro\Menu\Nodes;
 
-use Illuminate\Support\Str;
 use anlutro\Menu\Collection;
 
 /**

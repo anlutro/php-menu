@@ -9,8 +9,7 @@
 
 namespace anlutro\Menu;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Collection as BaseCollection;
+use anlutro\Menu\Util\StringUtils;
 
 /**
  * A collection of menu items.
@@ -155,7 +154,7 @@ class Collection
 	 */
 	public function makeSubmenu($title, array $attributes = array())
 	{
-		$collection = new static($this->builder, ['id' => Str::slug($title)]);
+		$collection = new static($this->builder, ['id' => StringUtils::slug($title)]);
 
 		return new Nodes\SubmenuNode($title, $collection, $attributes);
 	}

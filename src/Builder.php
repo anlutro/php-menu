@@ -9,8 +9,6 @@
 
 namespace anlutro\Menu;
 
-use Illuminate\Support\Str;
-
 /**
  * The top-level menu builder that contains information about the whole menu
  * system.

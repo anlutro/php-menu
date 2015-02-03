@@ -9,7 +9,7 @@
 
 namespace anlutro\Menu\Nodes;
 
-use Illuminate\Support\Str;
+use anlutro\Menu\Util\StringUtils;
 
 /**
  * A menu item.
@@ -119,9 +119,9 @@ abstract class AbstractNode
 			$this->prefix = $attributes['prefix'];
 		}
 
-		$attributes['id'] = isset($attributes['id']) ? $attributes['id'] : Str::slug($this->title);
+		$attributes['id'] = isset($attributes['id']) ? $attributes['id'] : StringUtils::slug($this->title);
 
-		return array_except($attributes, static::$notHtmlAttributes);
+		return array_diff_key($attributes, array_flip(static::$notHtmlAttributes));
 	}
 
 	/**
@@ -136,7 +136,7 @@ abstract class AbstractNode
 
 	public function getTitle()
 	{
-		return $this->prefix.e($this->title).$this->suffix;
+		return $this->prefix.htmlentities($this->title, ENT_QUOTES, 'UTF-8', false).$this->suffix;
 	}
 
 	public function getAttributes()
