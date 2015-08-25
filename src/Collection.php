@@ -184,6 +184,31 @@ class Collection
 	}
 
 	/**
+	 * Remove an item from the collection.
+	 *
+	 * @param  string $id
+	 *
+	 * @return boolean
+	 */
+	public function removeItem($id)
+	{
+		if (!array_key_exists($id, $this->ids)) {
+			return false;
+		}
+
+		$item = $this->ids[$id];
+		unset($this->ids[$id]);
+
+		foreach ($this->items as $k1 => $v1) {
+			foreach ($v1 as $k2 => $v2) {
+				if ($item === $v2) {
+					unset($this->items[$k1][$k2]);
+				}
+			}
+		}
+	}
+
+	/**
 	 * Determine whether the menu collection is currently empty or not.
 	 *
 	 * @return boolean

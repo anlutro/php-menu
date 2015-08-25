@@ -50,4 +50,19 @@ class MenuCollectionTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue(strpos($str, 'First Item') > strpos($str, 'Second Item'),
 			'Second Item should come before First Item.'.PHP_EOL.$str);
 	}
+
+	public function testCanRemoveItem()
+	{
+		$coll = $this->makeCollection();
+		$coll->addItem('First Item', '/foo', [], 20);
+		$coll->addItem('Second Item', '/foo', [], 10);
+		$coll->removeItem('first-item');
+
+		$this->assertNull($coll->getItem('first-item'));
+		$this->assertNotNull($coll->getItem('second-item'));
+
+		$str = $coll->render();
+		$this->assertSame(false, strpos($str, 'First Item'));
+		$this->assertNotSame(false, strpos($str, 'Second Item'));
+	}
 }
