@@ -10,6 +10,7 @@
 namespace anlutro\Menu\Nodes;
 
 use anlutro\Menu\Util\StringUtils;
+use anlutro\Menu\Icons\IconInterface;
 
 /**
  * A menu item.
@@ -33,7 +34,7 @@ abstract class AbstractNode
 	/**
 	 * The icon associated with the item.
 	 *
-	 * @var \anlutro\Menu\Icons\IconInterface
+	 * @var IconInterface
 	 */
 	protected $icon;
 
@@ -92,10 +93,10 @@ abstract class AbstractNode
 	 */
 	protected function parseAttributes(array $attributes)
 	{
-		if (isset($attributes['icon']) && $attributes['icon'] instanceof Icons\IconInterface) {
+		if (isset($attributes['icon']) && $attributes['icon'] instanceof IconInterface) {
 			$this->icon = $attributes['icon'];
 		} else {
-			/** @var Icons\IconInterface $resolver */
+			/** @var IconInterface $resolver */
 			foreach (static::$iconResolvers as $key => $resolver) {
 				if (array_key_exists($key, $attributes)) {
 					$this->icon = $resolver::createFromAttribute($attributes[$key]);
