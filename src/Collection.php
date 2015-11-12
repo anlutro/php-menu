@@ -17,6 +17,13 @@ use anlutro\Menu\Util\StringUtils;
 class Collection
 {
 	/**
+	 * The menu builder instance.
+	 *
+	 * @var Builder
+	 */
+	protected $builder;
+
+	/**
 	 * The menu collection's attributes.
 	 *
 	 * @var array
