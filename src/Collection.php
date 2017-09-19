@@ -1,7 +1,7 @@
 <?php
 /**
  * PHP Menu Builder
- * 
+ *
  * @author   Andreas Lutro <anlutro@gmail.com>
  * @license  http://opensource.org/licenses/MIT
  * @package  php-menu
@@ -116,11 +116,14 @@ class Collection
 	 * @param  array  $attributes
 	 * @param  int    $location
 	 *
-	 * @return \anlutro\Menu\Nodes\AnchorNode
+     * @return \anlutro\Menu\Nodes\AnchorNode
 	 */
 	public function addItem($title, $url, array $attributes = array(), $location = null)
 	{
-		return $this->addItemInstance($this->makeItem($title, $url, $attributes), $location);
+        /** @var \anlutro\Menu\Nodes\AnchorNode $item */
+        $item = $this->addItemInstance($this->makeItem($title, $url, $attributes), $location);
+
+        return $item;
 	}
 
 	/**
@@ -148,7 +151,10 @@ class Collection
 	 */
 	public function addSubmenu($title, array $attributes = array(), $location = null)
 	{
-		return $this->addItemInstance($this->makeSubmenu($title, $attributes), $location);
+        /** @var \anlutro\Menu\Nodes\SubmenuNode $submenu */
+        $submenu = $this->addItemInstance($this->makeSubmenu($title, $attributes), $location);
+
+        return $submenu;
 	}
 
 	/**
@@ -170,7 +176,9 @@ class Collection
 	 * Add a divider to the items.
 	 *
 	 * @param  int  $location
-	 */
+     *
+     * @return void
+     */
 	public function addDivider($location = null)
 	{
 		$node = new Nodes\DividerNode('divider-'.(++$this->dividerCount));
@@ -210,9 +218,13 @@ class Collection
 			foreach ($v1 as $k2 => $v2) {
 				if ($item === $v2) {
 					unset($this->items[$k1][$k2]);
+
+                    return true;
 				}
 			}
 		}
+
+        return false;
 	}
 
 	/**

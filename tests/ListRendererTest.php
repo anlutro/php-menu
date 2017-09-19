@@ -16,7 +16,7 @@ class ListRendererTest extends PHPUnit_Framework_TestCase
 		$submenu = $menu->addSubmenu('Test Submenu');
 		$submenu->addItem('Test Item 3', '/url-3');
 		$submenu->addItem('Test Item 4', '/url-4');
-		$expected = str_replace(["\n","\t"], '', '<ul id="menu--left" class="nav navbar-nav">
+		$expected = str_replace(["\n","\r","\t"], '', '<ul id="menu--left" class="nav navbar-nav">
 		<li><a href="/url-1" class="foo-bar" id="menu-item--test-item-1"><span class="glyphicon glyphicon-foo"></span>Test Item 1</a></li>
 		<li><a href="/url-2" data-foo="bar" id="menu-item--test-item-2"><i class="fa fa-bar"></i>Test Item 2</a></li>
 		<li class="dropdown"><a href="#" class="dropdown-toggle" id="menu-item--test-submenu" data-toggle="dropdown">
@@ -39,7 +39,7 @@ class ListRendererTest extends PHPUnit_Framework_TestCase
 		$menu->addDivider();
 		$menu->addItem('Test Item 2', '/url-2');
 		$menu->addDivider();
-		$expected = str_replace(["\n","\t"], '', '<ul id="menu--left" class="nav navbar-nav">
+		$expected = str_replace(["\n","\r","\t"], '', '<ul id="menu--left" class="nav navbar-nav">
 			<li><a href="/url-1" id="menu-item--test-item-1">Test Item 1</a></li>
 			<li class="divider"></li>
 			<li><a href="/url-2" id="menu-item--test-item-2">Test Item 2</a></li>
@@ -62,7 +62,7 @@ class ListRendererTest extends PHPUnit_Framework_TestCase
 		$menu->addDivider();
 		$menu->addItem('Test Item 4', '/url-2');
 		$correct = $renderer->render($menu);
-		$expected = str_replace(["\n","\t"], '', '<ul id="menu--left" class="nav navbar-nav">
+		$expected = str_replace(["\n","\r","\t"], '', '<ul id="menu--left" class="nav navbar-nav">
 			<li><a href="/url-1" id="menu-item--test-item-1">Test Item 1</a></li>
 			<li class="divider"></li>
 			<li><a href="/url-2" id="menu-item--test-item-2">Test Item 2</a></li>

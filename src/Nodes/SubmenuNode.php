@@ -1,7 +1,7 @@
 <?php
 /**
  * PHP Menu Builder
- * 
+ *
  * @author   Andreas Lutro <anlutro@gmail.com>
  * @license  http://opensource.org/licenses/MIT
  * @package  php-menu
@@ -13,6 +13,19 @@ use anlutro\Menu\Collection;
 
 /**
  * A menu submenu item.
+ *
+ * @method mixed[] getAttributes
+ * @method NodeInterface addItemInstance(NodeInterface $item, $location = null)
+ * @method AnchorNode addItem(string $title, string $url, array $attributes = array(), int $location = null)
+ * @method AnchorNode makeItem(string $title, string $url, array $attributes = array())
+ * @method SubmenuNode addSubmenu(string $title, array $attributes = array(), int $location = null)
+ * @method SubmenuNode makeSubmenu(string $title, array $attributes = array())
+ * @method void addDivider(int $location = null)
+ * @method NodeInterface|null getItem(string $id)
+ * @method boolean removeItem(string $id)
+ * @method boolean isEmpty()
+ * @method array getSortedItems()
+ * @method string render()
  */
 class SubmenuNode extends AbstractNode implements NodeInterface
 {
